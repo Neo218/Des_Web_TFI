@@ -1,3 +1,5 @@
+  Usuario por defecto en el script: usuario / clave
+
 Para levantar el proyecto 
   Backend
 
