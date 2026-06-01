@@ -1,3 +1,249 @@
+Para levantar el proyecto 
+  Backend
+
+  cd github/backend
+
+  # Instalar dependencias
+  npm install
+
+  # Crear archivo .env
+  cp .env.example .env
+
+  # Editar .env con tus datos:
+  # - DB_HOST=localhost
+  # - DB_PASSWORD=tu_contraseña_postgres
+  # - JWT_SECRET=una_clave_secreta
+
+  # Iniciar
+  npm run start:dev
+
+  Backend corre en http://localhost:3000
+
+  Frontend
+
+  cd github/frontend
+
+  # Instalar dependencias
+  npm install
+
+  # Iniciar
+  npm start
+
+  Frontend corre en http://localhost:4200
+
+  Requisitos
+
+  - Node.js 20+
+  - npm 11+
+  - PostgreSQL corriendo con base de datos gestion_proyectos creada
+
+dejo la DB y el .ENV que use
+
+
+Backend (NestJS)
+
+  Archivos de configuracion
+
+  ┌───────────────────┬───────────────────────────────────────────────┐
+  │      Archivo      │                    Función                    │
+  ├───────────────────┼───────────────────────────────────────────────┤
+  │ package.json      │ Dependencias y scripts del proyecto           │
+  ├───────────────────┼───────────────────────────────────────────────┤
+  │ package-lock.json │ Versiones exactas de dependencias             │
+  ├───────────────────┼───────────────────────────────────────────────┤
+  │ tsconfig.json     │ Configuración de TypeScript                   │
+  ├───────────────────┼───────────────────────────────────────────────┤
+  │ nest-cli.json     │ Configuración de la CLI de NestJS             │
+  ├───────────────────┼───────────────────────────────────────────────┤
+  │ .prettierrc       │ Configuración de formato de código            │
+  ├───────────────────┼───────────────────────────────────────────────┤
+  │ eslint.config.mjs │ Configuración de linting (análisis de código) │
+  └───────────────────┴───────────────────────────────────────────────┘
+
+  src/ - Estructura principal
+
+  ┌───────────────┬───────────────────────────────────────────┐
+  │    Archito    │                  Función                  │
+  ├───────────────┼───────────────────────────────────────────┤
+  │ main.ts       │ Punto de entrada, inicia el servidor      │
+  ├───────────────┼───────────────────────────────────────────┤
+  │ app.module.ts │ Módulo raíz que conecta todos los módulos │
+  └───────────────┴───────────────────────────────────────────┘
+
+  auth/ - Autenticación
+
+  ┌────────────────────┬───────────────────────────────────────────────┐
+  │      Archivo       │                    Función                    │
+  ├────────────────────┼───────────────────────────────────────────────┤
+  │ auth.controller.ts │ Recibe peticiones de login (/api/auth/login)  │
+  ├────────────────────┼───────────────────────────────────────────────┤
+  │ auth.service.ts    │ Lógica: valida credenciales, genera JWT       │
+  ├────────────────────┼───────────────────────────────────────────────┤
+  │ auth.module.ts     │ Configura el módulo de autenticación          │
+  ├────────────────────┼───────────────────────────────────────────────┤
+  │ jwt.strategy.ts    │ Estrategia Passport-JWT para validar tokens   │
+  ├────────────────────┼───────────────────────────────────────────────┤
+  │ jwt-auth.guard.ts  │ Guard: protege rutas que requieren login      │
+  ├────────────────────┼───────────────────────────────────────────────┤
+  │ dto/login.dto.ts   │ Define estructura del login (email, password) │
+  └────────────────────┴───────────────────────────────────────────────┘
+
+  clientes/ - Gestión de Clientes
+
+  ┌────────────────────────────┬───────────────────────────────┐
+  │          Archivo           │            Función            │
+  ├────────────────────────────┼───────────────────────────────┤
+  │ clientes.controller.ts     │ Endpoints CRUD de clientes    │
+  ├────────────────────────────┼───────────────────────────────┤
+  │ clientes.service.ts        │ Lógica de negocio de clientes │
+  ├────────────────────────────┼───────────────────────────────┤
+  │ clientes.module.ts         │ Configura el módulo           │
+  ├────────────────────────────┼───────────────────────────────┤
+  │ entities/cliente.entity.ts │ Modelo de tabla en BD         │
+  ├────────────────────────────┼───────────────────────────────┤
+  │ dto/create-cliente.dto.ts  │ Validación para crear cliente │
+  ├────────────────────────────┼───────────────────────────────┤
+  │ dto/update-cliente.dto.ts  │ Validación para actualizar    │
+  └────────────────────────────┴───────────────────────────────┘
+
+  proyectos/ - Gestión de Proyectos
+
+  ┌─────────────────────────────┬─────────────────────────────────────────┐
+  │           Archivo           │                 Función                 │
+  ├─────────────────────────────┼─────────────────────────────────────────┤
+  │ proyectos.controller.ts     │ Endpoints CRUD de proyectos             │
+  ├─────────────────────────────┼─────────────────────────────────────────┤
+  │ proyectos.service.ts        │ Lógica con relaciones a clientes        │
+  ├─────────────────────────────┼─────────────────────────────────────────┤
+  │ entities/proyecto.entity.ts │ Tabla proyectos (relación con clientes) │
+  ├─────────────────────────────┼─────────────────────────────────────────┤
+  │ dto/                        │ Validaciones de entrada                 │
+  └─────────────────────────────┴─────────────────────────────────────────┘
+
+  tareas/ - Gestión de Tareas
+
+  ┌──────────────────────────┬──────────────────────────────────────────┐
+  │         Archivo          │                 Función                  │
+  ├──────────────────────────┼──────────────────────────────────────────┤
+  │ tareas.controller.ts     │ Endpoints CRUD de tareas                 │
+  ├──────────────────────────┼──────────────────────────────────────────┤
+  │ tareas.service.ts        │ Lógica con relaciones a proyectos        │
+  ├──────────────────────────┼──────────────────────────────────────────┤
+  │ entities/tarea.entity.ts │ Tabla tareas (PENDIENTE/FINALIZADA/BAJA) │
+  └──────────────────────────┴──────────────────────────────────────────┘
+
+  ---
+  Frontend (Angular)
+
+  Archivos de configuración (raíz)
+
+  ┌────────────────┬─────────────────────────────────────┐
+  │    Archivo     │               Función               │
+  ├────────────────┼─────────────────────────────────────┤
+  │ package.json   │ Dependencias (@angular, rxjs, etc.) │
+  ├────────────────┼─────────────────────────────────────┤
+  │ angular.json   │ Configuración del proyecto Angular  │
+  ├────────────────┼─────────────────────────────────────┤
+  │ tsconfig*.json │ Configuración TypeScript            │
+  └────────────────┴─────────────────────────────────────┘
+
+  src/app/ - Estructura principal
+
+  ┌───────────────┬────────────────────────────────────┐
+  │    Archivo    │              Función               │
+  ├───────────────┼────────────────────────────────────┤
+  │ main.ts       │ Punto de entrada de Angular        │
+  ├───────────────┼────────────────────────────────────┤
+  │ app.config.ts │ Configuración global (proveedores) │
+  ├───────────────┼────────────────────────────────────┤
+  │ app.routes.ts │ Rutas de la aplicación             │
+  ├───────────────┼────────────────────────────────────┤
+  │ app.ts        │ Componente raíz                    │
+  └───────────────┴────────────────────────────────────┘
+
+  core/ - Funcionalidad compartida
+
+  ┌──────────────────────────────────┬───────────────────────────────────┐
+  │             Archivo              │              Función              │
+  ├──────────────────────────────────┼───────────────────────────────────┤
+  │ guards/auth.guard.ts             │ Protege rutas: requiere login     │
+  ├──────────────────────────────────┼───────────────────────────────────┤
+  │ interceptors/auth-interceptor.ts │ Agrega token JWT a las peticiones │
+  ├──────────────────────────────────┼───────────────────────────────────┤
+  │ services/auth-store.ts           │ Guarda token en localStorage      │
+  └──────────────────────────────────┴───────────────────────────────────┘
+
+  features/auth/login/ - Login
+
+  ┌─────────────────────┬─────────────────────────────────┐
+  │       Archivo       │             Función             │
+  ├─────────────────────┼─────────────────────────────────┤
+  │ login.ts            │ Componente: formulario y lógica │
+  ├─────────────────────┼─────────────────────────────────┤
+  │ login.html          │ Template del formulario         │
+  ├─────────────────────┼─────────────────────────────────┤
+  │ login.css           │ Estilos del login               │
+  ├─────────────────────┼─────────────────────────────────┤
+  │ login-api-client.ts │ Servicio que llama al backend   │
+  └─────────────────────┴─────────────────────────────────┘
+
+  features/clientes/ - Gestión de Clientes
+
+  ┌─────────────────────────┬──────────────────────────────────────────┐
+  │         Archivo         │                 Función                  │
+  ├─────────────────────────┼──────────────────────────────────────────┤
+  │ clientes.component.ts   │ Lógica (listar, crear, editar, eliminar) │
+  ├─────────────────────────┼──────────────────────────────────────────┤
+  │ clientes.component.html │ Vista con tabla y formularios            │
+  ├─────────────────────────┼──────────────────────────────────────────┤
+  │ clientes.component.css  │ Estilos                                  │
+  ├─────────────────────────┼──────────────────────────────────────────┤
+  │ cliente.service.ts      │ Servicio HTTP al backend                 │
+  ├─────────────────────────┼──────────────────────────────────────────┤
+  │ cliente.model.ts        │ Interface de Cliente                     │
+  └─────────────────────────┴──────────────────────────────────────────┘
+
+  features/proyectos/ - Gestión de Proyectos
+
+  ┌─────────────────────────────┬────────────────────────────────┐
+  │           Archivo           │            Función             │
+  ├─────────────────────────────┼────────────────────────────────┤
+  │ proyectos.component.*       │ Vista principal de proyectos   │
+  ├─────────────────────────────┼────────────────────────────────┤
+  │ proyecto.service.ts         │ Servicio HTTP                  │
+  ├─────────────────────────────┼────────────────────────────────┤
+  │ proyecto.model.ts           │ Interfaces                     │
+  ├─────────────────────────────┼────────────────────────────────┤
+  │ proyecto-tareas.component.* │ Vista de tareas de un proyecto │
+  └─────────────────────────────┴────────────────────────────────┘
+
+  features/tareas/ - Gestión de Tareas
+
+  ┌───────────────────────┬─────────────────────────────────────────┐
+  │        Archivo        │                 Función                 │
+  ├───────────────────────┼─────────────────────────────────────────┤
+  │ tareas.component.ts   │ Lógica de tareas agrupadas por proyecto │
+  ├───────────────────────┼─────────────────────────────────────────┤
+  │ tareas.component.html │ Cards agrupadas por proyecto            │
+  ├───────────────────────┼─────────────────────────────────────────┤
+  │ tareas.component.css  │ Grid layout y estilos                   │
+  ├───────────────────────┼─────────────────────────────────────────┤
+  │ tarea.service.ts      │ Servicio HTTP                           │
+  ├───────────────────────┼─────────────────────────────────────────┤
+  │ tarea.model.ts        │ Enum de estados                         │
+  └───────────────────────┴─────────────────────────────────────────┘
+
+  features/layout/ - Layout compartido
+
+  ┌────────────────────┬──────────────────────────────┐
+  │      Archivo       │           Función            │
+  ├────────────────────┼──────────────────────────────┤
+  │ layout.component.* │ Barra lateral con navegación │
+  └────────────────────┴──────────────────────────────┘
+
+
+
+
 # Des_Web_TFI
 
 Desarrollo de Aplicaciones Web - 2026 Tecnicatura Universitaria en Desarrollo Web
