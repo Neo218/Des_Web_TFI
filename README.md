@@ -1,3 +1,17 @@
+FALTA NGINX /  PM2
+  
+  
+<img width="1920" height="917" alt="FireShot Capture 001 - Frontend -  localhost" src="https://github.com/user-attachments/assets/2b800399-0c70-490a-802e-894b20c3879f" />
+<img width="1920" height="917" alt="FireShot Capture 005 - Frontend -  localhost" src="https://github.com/user-attachments/assets/dc836f2b-69e9-469b-bb07-131e78c13d76" />
+<img width="1920" height="1154" alt="FireShot Capture 006 - Frontend -  localhost" src="https://github.com/user-attachments/assets/934e4466-5247-4ffe-b2dc-c5e74a3252dc" />
+<img width="1920" height="917" alt="FireShot Capture 007 - Frontend -  localhost" src="https://github.com/user-attachments/assets/c8e4d62f-6567-428a-bcba-cd827bbba913" />
+<img width="1920" height="917" alt="FireShot Capture 002 - Frontend -  localhost" src="https://github.com/user-attachments/assets/2898e347-9253-4f9c-9ed0-2d2175473e07" />
+<img width="1920" height="917" alt="FireShot Capture 003 - Frontend -  localhost" src="https://github.com/user-attachments/assets/0a3a5426-b772-4daa-9072-31c047ad91a8" />
+<img width="1920" height="917" alt="FireShot Capture 004 - Frontend -  localhost" src="https://github.com/user-attachments/assets/1896d7ce-3785-4548-8801-2858096f59b7" />
+
+  
+  
+  
   Usuario por defecto en el script: usuario / clave
 
 Para levantar el proyecto 
@@ -201,6 +215,44 @@ tarea.model.ts — Enum de estados
 features/layout/ — Layout compartido
 
 layout.component.* — Barra lateral con navegación
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
