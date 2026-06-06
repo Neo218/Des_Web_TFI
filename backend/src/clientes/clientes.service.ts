@@ -79,20 +79,31 @@ export class ClientesService {
     return { id: saved.id, nombre: saved.nombre, estado: saved.estado };
   }
 
-  async remove(id: number, usuario?: UsuarioAutenticado): Promise<void> {
+  async remove(id: number, usuario?: UsuarioAutenticado): Promise<ListClienteDto> {
     const cliente = await this._findOneEntity(id);
     const antes = { id: cliente.id, nombre: cliente.nombre, estado: cliente.estado };
 
     // Verificar que el cliente no esté asociado a ningún proyecto
     // Esto se manejará en el módulo de proyectos o con una constraint en la DB
-    await this.clientesRepository.remove(cliente);
+    const relacionadoConProyectos = await this.proyectosService.existeProyectoPorIdCliente(id);
+    if (relacionadoConProyectos) {
+      throw new BadRequestException('No se puede dar de baja un cliente con proyectos relacionados');
+    }
+
+    cliente.estado = EstadoCliente.BAJA;
+    const saved = await this.clientesRepository.save(cliente);
     await this.historialService.registrarCambio({
       entidad: 'Clientes',
       idRegistro: id,
       accion: 'ELIMINACION',
       usuario,
-      detalle: { antes },
+      detalle: {
+        antes,
+        despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado },
+      },
     });
+
+    return { id: saved.id, nombre: saved.nombre, estado: saved.estado };
   }
 
   async existeClienteActivoPorId(id: number): Promise<boolean> {
