@@ -7,6 +7,14 @@ La aplicacion permite administrar clientes, proyectos y tareas, con autenticacio
 base de datos PostgreSQL, frontend Angular, backend NestJS, despliegue con nginx y
 ejecucion productiva del backend con PM2.
 
+# Integrantes
+- Matias Vespa
+- Marcos Gabriel Gainza
+- Daniel Marcelo Cisnero
+- Melina Johanna Lisette Casco
+- Jose Ignacio Debuck
+- Maria Gabriela Olivares Contreras
+
 ## Tecnologias utilizadas
 
 - Angular
