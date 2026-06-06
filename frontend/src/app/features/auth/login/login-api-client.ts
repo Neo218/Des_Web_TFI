@@ -7,7 +7,7 @@ import { LoginRequest, LoginResponse } from '../../../models/usuario.model';
   providedIn: 'root',
 })
 export class LoginApiClient {
-  private readonly apiUrl = 'http://localhost:3000/api/auth';
+  private readonly apiUrl = '/api/auth';
 
   constructor(private readonly http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { Proyecto, EstadoProyecto } from './proyecto.model';
   providedIn: 'root',
 })
 export class ProyectoService {
-  private apiUrl = 'http://localhost:3000/api/proyectos';
+  private apiUrl = '/api/proyectos';
 
   constructor(private http: HttpClient) {}
 
