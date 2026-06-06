@@ -1,350 +1,314 @@
-FALTA NGINX /  PM2
-  
-  
-<img width="1920" height="917" alt="FireShot Capture 001 - Frontend -  localhost" src="https://github.com/user-attachments/assets/2b800399-0c70-490a-802e-894b20c3879f" />
-<img width="1920" height="917" alt="FireShot Capture 005 - Frontend -  localhost" src="https://github.com/user-attachments/assets/dc836f2b-69e9-469b-bb07-131e78c13d76" />
-<img width="1920" height="1154" alt="FireShot Capture 006 - Frontend -  localhost" src="https://github.com/user-attachments/assets/934e4466-5247-4ffe-b2dc-c5e74a3252dc" />
-<img width="1920" height="917" alt="FireShot Capture 007 - Frontend -  localhost" src="https://github.com/user-attachments/assets/c8e4d62f-6567-428a-bcba-cd827bbba913" />
-<img width="1920" height="917" alt="FireShot Capture 002 - Frontend -  localhost" src="https://github.com/user-attachments/assets/2898e347-9253-4f9c-9ed0-2d2175473e07" />
-<img width="1920" height="917" alt="FireShot Capture 003 - Frontend -  localhost" src="https://github.com/user-attachments/assets/0a3a5426-b772-4daa-9072-31c047ad91a8" />
-<img width="1920" height="917" alt="FireShot Capture 004 - Frontend -  localhost" src="https://github.com/user-attachments/assets/1896d7ce-3785-4548-8801-2858096f59b7" />
-
-  
-  
-  
-  Usuario por defecto en el script: usuario / clave
-
-Para levantar el proyecto 
-  Backend
-
-  cd github/backend
-
-  # Instalar dependencias
-  npm install
-
-  # Crear archivo .env
-  cp .env.example .env
-
-  # Editar .env con tus datos:
-  # - DB_HOST=localhost
-  # - DB_PASSWORD=tu_contraseña_postgres
-  # - JWT_SECRET=una_clave_secreta
-
-  # Iniciar
-  npm run start:dev
-
-  Backend corre en http://localhost:3000
-
-  Frontend
-
-  cd github/frontend
-
-  # Instalar dependencias
-  npm install
-
-  # Iniciar
-  npm start
-
-  Frontend corre en http://localhost:4200
-
-  Requisitos
-
-  - Node.js 20+
-  - npm 11+
-  - PostgreSQL corriendo con base de datos gestion_proyectos creada
-
-dejo la DB y el .ENV que use
-
-
-Backend (NestJS)
-Archivos de configuración
-
-package.json — Dependencias y scripts 
-
-package-lock.json — Versiones de dependencias
-
-tsconfig.json — Config de TypeScript
-
-nest-cli.json — Config de la CLI de NestJS
-
-.prettierrc — Config formato de código
-
-eslint.config.mjs — Configu linting (análisis de código)
-
-
-src/ — Estructura principal
-
-main.ts — Punto de entrada, inicia el servidor
-
-app.module.ts — Módulo raíz que conecta todos los módulos
-
-
-auth/ — Autenticación
-
-auth.controller.ts — Recibe peticiones de login (/api/auth/login)
-
-auth.service.ts — Lógica: valida credenciales, genera JWT
-
-auth.module.ts — Configura el módulo de autenticación
-
-jwt.strategy.ts — Estrategia Passport-JWT para validar tokens
-
-jwt-auth.guard.ts — Guard: protege rutas que requieren login
-
-dto/login.dto.ts — Define estructura del login (email, password)
-
-
-clientes/ — Gestión de Clientes
-
-clientes.controller.ts — Endpoints CRUD de clientes
-
-clientes.service.ts — Lógica de negocio de clientes
-
-clientes.module.ts — Configura el módulo
-
-entities/cliente.entity.ts — Modelo de tabla en BD
-
-dto/create-cliente.dto.ts — Validación para crear cliente
-
-dto/update-cliente.dto.ts — Validación para actualizar
-
-
-proyectos/ — Gestión de Proyectos
-
-proyectos.controller.ts — Endpoints CRUD de proyectos
-
-proyectos.service.ts — Lógica con relaciones a clientes
-
-entities/proyecto.entity.ts — Tabla proyectos (relación con clientes)
-
-dto/ — Validaciones de entrada
-
-
-tareas/ — Gestión de Tareas
-
-tareas.controller.ts — Endpoints CRUD de tareas
-
-tareas.service.ts — Lógica con relaciones a proyectos
-
-entities/tarea.entity.ts — Tabla tareas (PENDIENTE/FINALIZADA/BAJA)
-
-
-
-Frontend (Angular)
-
-Archivos de configuración (raíz)
-
-
-package.json — Dependencias (@angular, rxjs, etc.)
-
-angular.json — Configuración del proyecto Angular
-
-tsconfig*.json — Configuración TypeScript
-
-
-src/app/ — Estructura principal
-
-main.ts — Punto de entrada de Angular
-
-app.config.ts — Configuración global (proveedores)
-
-app.routes.ts — Rutas de la aplicación
-app.ts — Componente raíz
-
-
-core/ — Funcionalidad compartida
-
-
-guards/auth.guard.ts — Protege rutas: requiere login
-
-interceptors/auth-interceptor.ts — Agrega token JWT a las peticiones
-
-services/auth-store.ts — Guarda token en localStorage
-
-
-features/auth/login/ — Login
-
-login.ts — Componente: formulario y lógica
-
-login.html — Template del formulario
-
-login.css — Estilos del login
-
-login-api-client.ts — Servicio que llama al backend
-
-
-
-features/clientes/ — Gestión de Clientes
-
-clientes.component.ts — Lógica (listar, crear, editar, eliminar)
-
-clientes.component.html — Vista con tabla y formularios
-
-clientes.component.css — Estilos
-
-cliente.service.ts — Servicio HTTP al backend
-
-cliente.model.ts — Interface de Cliente
-
-
-features/proyectos/ — Gestión de Proyectos
-
-proyectos.component.* — Vista principal de proyectos
-
-proyecto.service.ts — Servicio HTTP
-
-proyecto.model.ts — Interfaces
-
-proyecto-tareas.component.* — Vista de tareas de un proyecto
-
-
-features/tareas/ — Gestión de Tareas
-
-tareas.component.ts — Lógica de tareas agrupadas por proyecto
-
-tareas.component.html — Cards agrupadas por proyecto
-
-tareas.component.css — Grid layout y estilos
-
-tarea.service.ts — Servicio HTTP
-
-tarea.model.ts — Enum de estados
-
-
-
-features/layout/ — Layout compartido
-
-layout.component.* — Barra lateral con navegación
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Des_Web_TFI
 
-Desarrollo de Aplicaciones Web - 2026 Tecnicatura Universitaria en Desarrollo Web
+Sistema web de gestion de proyectos desarrollado como Trabajo Final Integrador de
+Desarrollo de Aplicaciones Web.
 
+La aplicacion permite administrar clientes, proyectos y tareas, con autenticacion,
+base de datos PostgreSQL, frontend Angular, backend NestJS, despliegue con nginx y
+ejecucion productiva del backend con PM2.
 
-Trabajo Final Integrador 
+# Integrantes
+- Matias Vespa
+- Marcos Gabriel Gainza
+- Daniel Marcelo Cisnero
+- Melina Johanna Lisette Casco
+- Jose Ignacio Debuck
+- Maria Gabriela Olivares Contreras
 
+## Tecnologias utilizadas
 
-OBJETIVOS:
+- Angular
+- NestJS
+- TypeORM
+- PostgreSQL
+- nginx
+- PM2
+- Node.js / npm
 
-Se busca que el estudiante ponga en práctica todos los conocimientos adquiridos durante el
-cursado de la asignatura, logrando el desarrollo de una aplicación web.
+## Funcionalidades principales
 
-CONSIDERACIONES:
+- Login de usuario con JWT.
+- Gestion de clientes.
+- Gestion de proyectos.
+- Gestion de tareas por proyecto.
+- Relacion entre clientes, proyectos y tareas.
+- Restriccion de acciones segun estados de los registros.
+- Visualizacion compartida de la informacion para todos los usuarios del sistema.
 
-● El trabajo debe ser realizado en forma grupal. Cada grupo podrá contar con un
-mínimo de 4 estudiantes y un máximo de 6 estudiantes.
+## Extras implementados
 
-● Las soluciones deben ser de autoría propia. Aquellas que se detecten como idénticas
-entre diferentes grupos o que evidencien ser idénticas a las de un tercero serán
-clasificadas como desaprobadas para todos los involucrados.
+- Exportacion de datos en CSV desde la pantalla de tareas.
+- Estadisticas generales desde la pantalla de inicio.
+- Historial de cambios por entidad, registrando accion, usuario y fecha.
+- Configuracion de despliegue con nginx y PM2.
 
-● Además de las consignas presentadas en el enunciado, cada integrante debe agregar
-una funcionalidad adicional de su elección al sistema.
+## Capturas
 
-● Se deberá entregar un video de entre 8 y 12 minutos donde se exponga el
-funcionamiento del sistema. Un integrante debe ser el responsable de presentar el
-funcionamiento general, exponiendo la forma en que se cumplieron los objetivos
-planteados en las consignas base.
+Las siguientes capturas muestran pantallas principales del sistema.
 
-● Es obligatorio que todos los integrantes del grupo participen del video, con cámara y
-micrófono, y expongan, cuanto mínimo, la funcionalidad adicional que agregaron,
-aclarando su nombre y apellido.
+<img width="1920" height="917" alt="Inicio" src="https://github.com/user-attachments/assets/2b800399-0c70-490a-802e-894b20c3879f" />
 
-● Las entregas realizadas en el campus deberán consistir de una carpeta comprimida con
-formato .zip, respetando las fechas límite publicadas. Las entregas deben contener
-tanto el código fuente del sistema como el enlace al vídeo.
+<img width="1920" height="917" alt="Clientes" src="https://github.com/user-attachments/assets/dc836f2b-69e9-469b-bb07-131e78c13d76" />
 
-● El trabajo final será calificado de forma grupal como aprobado / desaprobado.
+<img width="1920" height="1154" alt="Proyectos" src="https://github.com/user-attachments/assets/934e4466-5247-4ffe-b2dc-c5e74a3252dc" />
 
+<img width="1920" height="917" alt="Tareas" src="https://github.com/user-attachments/assets/c8e4d62f-6567-428a-bcba-cd827bbba913" />
 
-ENUNCIADO:
+<img width="1920" height="917" alt="Estadisticas" src="https://github.com/user-attachments/assets/2898e347-9253-4f9c-9ed0-2d2175473e07" />
 
-La consultora en la que usted realiza su pasantía ha decidido iniciar el desarrollo de un
-sistema de gestión de proyectos que tiene como objetivo principal destacar por su
-simplicidad.
+<img width="1920" height="917" alt="Historial" src="https://github.com/user-attachments/assets/0a3a5426-b772-4daa-9072-31c047ad91a8" />
 
-Como parte del equipo de desarrollo, usted y su grupo han sido seleccionados para llevar
-adelante este proyecto, el cual servirá como evaluación clave para determinar su contratación
-en la empresa.
+<img width="1920" height="917" alt="Exportacion CSV" src="https://github.com/user-attachments/assets/1896d7ce-3785-4548-8801-2858096f59b7" />
 
-📌 Requerimientos iniciales
+Si se agregan nuevas imagenes al repositorio, se recomienda guardarlas en
+`docs/imagenes/` y referenciarlas desde este README con rutas relativas.
 
-🔹 Acceso:
+## Requisitos previos
 
-● Se deben proporcionar las credenciales de un usuario válido para ingresar al sistema.
-Las propiedades de un usuario son su nombre de usuario, su clave, y su estado
-(Activo o baja).
+Antes de ejecutar el proyecto, instalar:
 
-🔹 Gestión de proyectos:
+- Node.js 20 o superior.
+- npm.
+- PostgreSQL.
+- nginx, solo para prueba productiva.
+- PM2, solo para prueba productiva.
 
-● Se debe poder crear y modificar proyectos, así como también ver el detalle de las
-tareas que componen cada proyecto y el cliente al que corresponde. Las propiedades
-principales de un proyecto son su nombre y estado (Activo, finalizado o baja).
+En Windows, si PowerShell bloquea scripts de npm, usar `npm.cmd` en lugar de `npm`.
 
-🔹 Gestión de clientes:
+## Base de datos
 
-● Al crear o modificar un proyecto, se puede especificar el cliente correspondiente si
-aplica (solo se puede elegir cliente en estado “Activo”), o no especificar ninguno si es
-un proyecto interno de la empresa. Se debe poder crear y modificar clientes de forma
-sencilla como parte del proceso de gestión de proyectos. Un cliente tiene como
-propiedades su nombre y su estado (Activo o baja). Solo se puede dar de baja un
-cliente si el mismo no está registrado en ningún proyecto.
+1. Crear una base de datos PostgreSQL llamada:
 
-🔹 Gestión de tareas:
+```sql
+gestion_proyectos
+```
 
-● Dado un proyecto ya creado, se debe poder agregar, modificar y eliminar tareas. Cada
-tarea tiene como propiedades su descripción y estado (Pendiente, finalizado o baja).
+2. Ejecutar el script incluido en la raiz del proyecto:
 
-🔹 Restricciones de visualización:
+```text
+Script_BD_fixed.sql
+```
 
-● Todos los proyectos, clientes, y tareas son visibles para todos los usuarios de una
-instalación del sistema. Los usuarios no son propietarios de los registros creados.
+Ese script crea las tablas necesarias y carga el usuario inicial.
 
-📌 Objetivo del Trabajo
+Credenciales de prueba:
 
-Se espera que el equipo diseñe e implemente un sistema funcional que cumpla con estos
-requerimientos, aplicando buenas prácticas de desarrollo de software y asegurando una
-experiencia fluida para los usuarios.
-Para el desarrollo se deben utilizar las siguientes tecnologías: NestJS, TypeORM,
-PostgreSQL, nginx, PM2, y Angular.
+```text
+usuario / clave
+```
+
+## Variables de entorno del backend
+
+Crear el archivo `backend/.env` tomando como base `backend/.env.example`.
+
+Ejemplo:
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=tu_clave_postgres
+DB_DATABASE=gestion_proyectos
+
+JWT_SECRET=una_clave_secreta
+PORT=3000
+```
+
+Cambiar `DB_PASSWORD` por la clave real de PostgreSQL de la computadora donde se
+ejecute el proyecto.
+
+## Instalacion
+
+Desde la raiz del proyecto, instalar dependencias del backend:
+
+```powershell
+cd backend
+npm.cmd install
+```
+
+Instalar dependencias del frontend:
+
+```powershell
+cd ../frontend
+npm.cmd install
+```
+
+## Ejecucion en desarrollo
+
+Levantar el backend:
+
+```powershell
+cd backend
+npm.cmd run start:dev
+```
+
+El backend queda disponible en:
+
+```text
+http://localhost:3000
+```
+
+Levantar el frontend:
+
+```powershell
+cd frontend
+npm.cmd start
+```
+
+El frontend queda disponible en:
+
+```text
+http://localhost:4200
+```
+
+En desarrollo, Angular usa `frontend/proxy.conf.json` para redirigir las llamadas
+`/api` hacia el backend NestJS.
+
+## Ejecucion productiva con nginx y PM2
+
+Este flujo cumple con el esquema:
+
+```text
+Navegador -> nginx -> Angular
+Navegador -> nginx /api -> NestJS con PM2 -> PostgreSQL
+```
+
+### 1. Backend con PM2
+
+Desde la carpeta `backend`:
+
+```powershell
+npm.cmd install
+npm.cmd run pm2:start
+```
+
+Comandos utiles:
+
+```powershell
+pm2.cmd list
+npm.cmd run pm2:restart
+npm.cmd run pm2:stop
+```
+
+El archivo de configuracion de PM2 es:
+
+```text
+backend/ecosystem.config.js
+```
+
+### 2. Frontend compilado para nginx
+
+Desde la carpeta `frontend`:
+
+```powershell
+npm.cmd install
+npm.cmd run deploy
+```
+
+El comando `deploy` compila Angular y copia los archivos generados a:
+
+```text
+C:/nginx-1.31.1/html
+```
+
+Si nginx esta instalado en otra carpeta, ajustar el script `nginx:copy` en
+`frontend/package.json`.
+
+### 3. Configuracion de nginx
+
+El proyecto incluye una configuracion base en:
+
+```text
+deploy/nginx/des-web-tfi.conf
+```
+
+Esa configuracion sirve el frontend Angular y redirige `/api` al backend en
+`http://127.0.0.1:3000/api`.
+
+Para usarla, copiar su contenido al archivo `nginx.conf` de la instalacion local de
+nginx, o incluirla desde la configuracion principal.
+
+Ejemplo de ubicacion usada en Windows:
+
+```text
+C:/nginx-1.31.1/conf/nginx.conf
+```
+
+Luego iniciar o reiniciar nginx.
+
+Con nginx y PM2 funcionando, abrir:
+
+```text
+http://localhost
+```
+
+## Pruebas rapidas
+
+Verificar backend por PM2:
+
+```powershell
+pm2.cmd list
+```
+
+Verificar la app productiva:
+
+```text
+http://localhost
+```
+
+Verificar la app en desarrollo:
+
+```text
+http://localhost:4200
+```
+
+Login de prueba:
+
+```text
+usuario / clave
+```
+
+## Estructura del proyecto
+
+```text
+Des_Web_TFI/
+├── backend/              # API NestJS
+│   ├── src/
+│   │   ├── auth/         # Login, JWT y proteccion de rutas
+│   │   ├── clientes/     # CRUD de clientes
+│   │   ├── proyectos/    # CRUD de proyectos
+│   │   ├── tareas/       # CRUD de tareas
+│   │   ├── usuarios/     # Gestion de usuarios
+│   │   └── historial/    # Registro de cambios
+│   ├── .env.example
+│   └── ecosystem.config.js
+├── frontend/             # Aplicacion Angular
+│   ├── src/app/
+│   │   ├── core/         # Guards, interceptores y servicios compartidos
+│   │   └── features/     # Pantallas principales
+│   └── proxy.conf.json
+├── deploy/
+│   ├── README.md
+│   └── nginx/
+│       └── des-web-tfi.conf
+├── Script_BD_fixed.sql
+└── README.md
+```
+
+## Pantallas del sistema
+
+- Inicio: muestra metricas generales y estadisticas.
+- Clientes: permite crear, editar y dar de baja clientes.
+- Proyectos: permite administrar proyectos y su cliente asociado.
+- Tareas: permite administrar tareas y exportarlas a CSV.
+- Historial: permite consultar acciones realizadas sobre los registros.
+
+## Notas para entrega
+
+- El proyecto debe ejecutarse con PostgreSQL activo.
+- El archivo `backend/.env` debe configurarse en cada computadora.
+- La carpeta `node_modules` no se sube al repositorio.
+- Las carpetas `dist` son generadas por los comandos de build.
+- Para una prueba productiva, usar `http://localhost`.
+- Para una prueba de desarrollo, usar `http://localhost:4200`.
+

@@ -5,6 +5,85 @@
     <p>Clientes, proyectos y tareas en un solo lugar</p>
   </div>
 
+  <section class="dashboard-section">
+    <div class="section-header">
+      <h2>Estadísticas</h2>
+      <button type="button" class="refresh-btn" (click)="loadEstadisticas()" [disabled]="loading()">
+        <span>↻</span>
+        <span>Actualizar</span>
+      </button>
+    </div>
+
+    @if (error()) {
+    <div class="alert-message">{{ error() }}</div>
+    }
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-label">Proyectos activos</span>
+        <strong>{{ estadisticas.proyectosActivos }}</strong>
+        <span class="metric-detail">{{ estadisticas.totalProyectos }} proyectos totales</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Tareas pendientes</span>
+        <strong>{{ estadisticas.tareasPendientes }}</strong>
+        <span class="metric-detail">{{ estadisticas.totalTareas }} tareas totales</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Clientes activos</span>
+        <strong>{{ estadisticas.clientesActivos }}</strong>
+        <span class="metric-detail">{{ estadisticas.totalClientes }} clientes totales</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Proyectos internos</span>
+        <strong>{{ estadisticas.proyectosInternos }}</strong>
+        <span class="metric-detail">{{ estadisticas.proyectosFinalizados }} finalizados</span>
+      </div>
+    </div>
+
+    <div class="insights-grid">
+      <div class="insight-panel">
+        <h3>Proyectos por cliente</h3>
+        @if (proyectosPorCliente.length > 0) {
+        <div class="bar-list">
+          @for (item of proyectosPorCliente; track item.cliente) {
+          <div class="bar-item">
+            <div class="bar-item-header">
+              <span>{{ item.cliente }}</span>
+              <strong>{{ item.total }}</strong>
+            </div>
+            <div class="bar-track">
+              <span class="bar-fill projects-fill" [style.width.%]="getPorcentaje(item.total, estadisticas.totalProyectos)"></span>
+            </div>
+            <small>{{ item.activos }} activos · {{ item.finalizados }} finalizados</small>
+          </div>
+          }
+        </div>
+        } @else {
+        <p class="empty-metric">Sin proyectos registrados</p>
+        }
+      </div>
+
+      <div class="insight-panel">
+        <h3>Estado de tareas</h3>
+        <div class="status-list">
+          <div class="status-row pending">
+            <span>Pendientes</span>
+            <strong>{{ estadisticas.tareasPendientes }}</strong>
+          </div>
+          <div class="status-row completed">
+            <span>Finalizadas</span>
+            <strong>{{ estadisticas.tareasFinalizadas }}</strong>
+          </div>
+          <div class="status-row inactive">
+            <span>Baja</span>
+            <strong>{{ estadisticas.tareasBaja }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="stats-grid">
     <div class="stat-card" (click)="navigateTo('/clientes')">
       <div class="stat-icon clients">

@@ -36,6 +36,17 @@ CREATE TABLE tareas (
         REFERENCES proyectos (id)
 );
 
+CREATE TABLE historial_cambios (
+    id SERIAL PRIMARY KEY,
+    entidad TEXT NOT NULL,
+    id_registro INT,
+    accion TEXT NOT NULL,
+    usuario_id INT,
+    usuario_nombre TEXT NOT NULL,
+    fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    detalle TEXT
+);
+
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 insert into usuarios (nombre, clave, estado) values ('usuario', crypt('clave', gen_salt('bf', 10)), 'ACTIVO');

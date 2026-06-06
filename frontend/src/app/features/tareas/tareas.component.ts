@@ -177,6 +177,40 @@ export class TareasComponent implements OnInit {
     });
   }
 
+  exportarTareasCsv(): void {
+    if (this.tareas.length === 0) {
+      alert('No hay tareas para exportar.');
+      return;
+    }
+
+    const headers = ['ID', 'Descripcion', 'Estado', 'Proyecto', 'Cliente'];
+    const rows = this.tareas.map((tarea) => [
+      tarea.id ?? '',
+      tarea.descripcion,
+      tarea.estado,
+      tarea.proyecto?.nombre ?? 'Sin proyecto',
+      tarea.proyecto?.cliente?.nombre ?? 'Interno',
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((value) => this.formatCsvValue(value)).join(','))
+      .join('\r\n');
+
+    const blob = new Blob([`\ufeff${csvContent}`], {
+      type: 'text/csv;charset=utf-8;',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const fileName = this.filterProyecto
+      ? `tareas-proyecto-${this.filterProyecto}.csv`
+      : 'tareas.csv';
+
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  }
+
   cancelForm(): void {
     this.showForm.set(false);
     this.tareaForm.reset();
@@ -231,6 +265,11 @@ export class TareasComponent implements OnInit {
     // Convertir a array y ordenar por cantidad de tareas pendientes (descendente)
     return Array.from(agrupadas.values())
       .filter(p => p.tareas.length > 0 || !this.filterProyecto);
+  }
+
+  private formatCsvValue(value: string | number): string {
+    const text = String(value).replace(/"/g, '""');
+    return `"${text}"`;
   }
 }
  

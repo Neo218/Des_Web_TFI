@@ -1,19 +1,14 @@
 module.exports = {
   apps: [
     {
-      name: 'gestor-de-proyectos',
+      name: 'des-web-tfi-backend',
+      cwd: __dirname,
       script: 'dist/main.js',
+      instances: 1,
+      exec_mode: 'fork',
       env: {
         NODE_ENV: 'production',
-        PORT: 4201,
-        DB_HOST: 'localhost',
-        DB_PORT: 5432,
-        DB_USERNAME: 'postgres',
-        DB_PASSWORD: 'clave',
-        DB_NAME: 'gestor_de_proyectos',
-        DB_LOGGING: 'false',
-        SWAGGER_HABILITADO: false,
-        JWT_SECRET: "gtT0zY6&5Sx%7c29x&O4@^@73D&uz^xQ"
+        PORT: 3000,
       },
       time: true,
     },

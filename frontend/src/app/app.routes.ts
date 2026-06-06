@@ -40,6 +40,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/tareas/tareas.component').then((m) => m.TareasComponent),
       },
+      {
+        path: 'historial',
+        loadComponent: () =>
+          import('./features/historial/historial.component').then((m) => m.HistorialComponent),
+      },
     ],
   },
   { path: '**', redirectTo: '/login' },

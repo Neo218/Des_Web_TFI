@@ -4,10 +4,16 @@
       <h2><span class="page-header-icon">✅</span> Gestión de Tareas</h2>
       <p class="page-header-subtitle">Administra las tareas de todos tus proyectos</p>
     </div>
-    <button (click)="showCreateForm()" class="btn btn-primary">
+    <div class="header-actions">
+      <button (click)="exportarTareasCsv()" class="btn btn-secondary" [disabled]="loading() || tareas.length === 0">
+        <span>CSV</span>
+        <span>Exportar CSV</span>
+      </button>
+      <button (click)="showCreateForm()" class="btn btn-primary">
       <span>➕</span>
       <span>Nueva Tarea</span>
-    </button>
+      </button>
+    </div>
   </div>
 
   <div class="filter-bar">

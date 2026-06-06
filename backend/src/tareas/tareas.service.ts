@@ -7,17 +7,33 @@ import { UpdateTareaDto } from './dto/update-tarea.dto';
 import { ListTareaDto } from './dto/list-tarea.dto';
 import { ListProyectoDto } from '../proyectos/dto/list-proyecto.dto';
 import { ListClienteDto } from '../clientes/dto/list-cliente.dto';
+import { HistorialService, UsuarioAutenticado } from '../historial/historial.service';
 
 @Injectable()
 export class TareasService {
   constructor(
     @InjectRepository(Tarea)
     private tareasRepository: Repository<Tarea>,
+    private readonly historialService: HistorialService,
   ) {}
 
-  async create(createTareaDto: CreateTareaDto): Promise<{ id: number }> {
+  async create(createTareaDto: CreateTareaDto, usuario?: UsuarioAutenticado): Promise<{ id: number }> {
     const tarea = this.tareasRepository.create(createTareaDto);
     const saved = await this.tareasRepository.save(tarea);
+    await this.historialService.registrarCambio({
+      entidad: 'Tareas',
+      idRegistro: saved.id,
+      accion: 'CREACION',
+      usuario,
+      detalle: {
+        despues: {
+          id: saved.id,
+          descripcion: saved.descripcion,
+          estado: saved.estado,
+          id_proyecto: saved.id_proyecto,
+        },
+      },
+    });
     return { id: saved.id };
   }
 
@@ -104,10 +120,32 @@ export class TareasService {
     };
   }
 
-  async update(id: number, updateTareaDto: UpdateTareaDto): Promise<ListTareaDto> {
+  async update(id: number, updateTareaDto: UpdateTareaDto, usuario?: UsuarioAutenticado): Promise<ListTareaDto> {
     const tarea = await this._findOneEntity(id);
+    const antes = {
+      id: tarea.id,
+      descripcion: tarea.descripcion,
+      estado: tarea.estado,
+      id_proyecto: tarea.id_proyecto,
+      proyecto: tarea.proyecto?.nombre,
+    };
     Object.assign(tarea, updateTareaDto);
     const saved = await this.tareasRepository.save(tarea);
+    await this.historialService.registrarCambio({
+      entidad: 'Tareas',
+      idRegistro: saved.id,
+      accion: 'MODIFICACION',
+      usuario,
+      detalle: {
+        antes,
+        despues: {
+          id: saved.id,
+          descripcion: saved.descripcion,
+          estado: saved.estado,
+          id_proyecto: saved.id_proyecto,
+        },
+      },
+    });
 
     const clienteDto: ListClienteDto | undefined = saved.proyecto?.cliente ? {
       id: saved.proyecto.cliente.id,
@@ -130,9 +168,23 @@ export class TareasService {
     };
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, usuario?: UsuarioAutenticado): Promise<void> {
     const tarea = await this._findOneEntity(id);
+    const antes = {
+      id: tarea.id,
+      descripcion: tarea.descripcion,
+      estado: tarea.estado,
+      id_proyecto: tarea.id_proyecto,
+      proyecto: tarea.proyecto?.nombre,
+    };
     await this.tareasRepository.remove(tarea);
+    await this.historialService.registrarCambio({
+      entidad: 'Tareas',
+      idRegistro: id,
+      accion: 'ELIMINACION',
+      usuario,
+      detalle: { antes },
+    });
   }
 
   private async _findOneEntity(id: number): Promise<Tarea> {

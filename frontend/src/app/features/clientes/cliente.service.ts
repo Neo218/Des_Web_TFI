@@ -7,7 +7,7 @@ import { Cliente, EstadoCliente } from './cliente.model';
   providedIn: 'root',
 })
 export class ClienteService {
-  private apiUrl = 'http://localhost:3000/api/clientes';
+  private apiUrl = '/api/clientes';
 
   constructor(private http: HttpClient) {}
 
