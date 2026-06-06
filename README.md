@@ -1,3 +1,262 @@
+FALTA NGINX /  PM2
+  
+  
+<img width="1920" height="917" alt="FireShot Capture 001 - Frontend -  localhost" src="https://github.com/user-attachments/assets/2b800399-0c70-490a-802e-894b20c3879f" />
+<img width="1920" height="917" alt="FireShot Capture 005 - Frontend -  localhost" src="https://github.com/user-attachments/assets/dc836f2b-69e9-469b-bb07-131e78c13d76" />
+<img width="1920" height="1154" alt="FireShot Capture 006 - Frontend -  localhost" src="https://github.com/user-attachments/assets/934e4466-5247-4ffe-b2dc-c5e74a3252dc" />
+<img width="1920" height="917" alt="FireShot Capture 007 - Frontend -  localhost" src="https://github.com/user-attachments/assets/c8e4d62f-6567-428a-bcba-cd827bbba913" />
+<img width="1920" height="917" alt="FireShot Capture 002 - Frontend -  localhost" src="https://github.com/user-attachments/assets/2898e347-9253-4f9c-9ed0-2d2175473e07" />
+<img width="1920" height="917" alt="FireShot Capture 003 - Frontend -  localhost" src="https://github.com/user-attachments/assets/0a3a5426-b772-4daa-9072-31c047ad91a8" />
+<img width="1920" height="917" alt="FireShot Capture 004 - Frontend -  localhost" src="https://github.com/user-attachments/assets/1896d7ce-3785-4548-8801-2858096f59b7" />
+
+  
+  
+  
+  Usuario por defecto en el script: usuario / clave
+
+Para levantar el proyecto 
+  Backend
+
+  cd github/backend
+
+  # Instalar dependencias
+  npm install
+
+  # Crear archivo .env
+  cp .env.example .env
+
+  # Editar .env con tus datos:
+  # - DB_HOST=localhost
+  # - DB_PASSWORD=tu_contraseña_postgres
+  # - JWT_SECRET=una_clave_secreta
+
+  # Iniciar
+  npm run start:dev
+
+  Backend corre en http://localhost:3000
+
+  Frontend
+
+  cd github/frontend
+
+  # Instalar dependencias
+  npm install
+
+  # Iniciar
+  npm start
+
+  Frontend corre en http://localhost:4200
+
+  Requisitos
+
+  - Node.js 20+
+  - npm 11+
+  - PostgreSQL corriendo con base de datos gestion_proyectos creada
+
+dejo la DB y el .ENV que use
+
+
+Backend (NestJS)
+Archivos de configuración
+
+package.json — Dependencias y scripts 
+
+package-lock.json — Versiones de dependencias
+
+tsconfig.json — Config de TypeScript
+
+nest-cli.json — Config de la CLI de NestJS
+
+.prettierrc — Config formato de código
+
+eslint.config.mjs — Configu linting (análisis de código)
+
+
+src/ — Estructura principal
+
+main.ts — Punto de entrada, inicia el servidor
+
+app.module.ts — Módulo raíz que conecta todos los módulos
+
+
+auth/ — Autenticación
+
+auth.controller.ts — Recibe peticiones de login (/api/auth/login)
+
+auth.service.ts — Lógica: valida credenciales, genera JWT
+
+auth.module.ts — Configura el módulo de autenticación
+
+jwt.strategy.ts — Estrategia Passport-JWT para validar tokens
+
+jwt-auth.guard.ts — Guard: protege rutas que requieren login
+
+dto/login.dto.ts — Define estructura del login (email, password)
+
+
+clientes/ — Gestión de Clientes
+
+clientes.controller.ts — Endpoints CRUD de clientes
+
+clientes.service.ts — Lógica de negocio de clientes
+
+clientes.module.ts — Configura el módulo
+
+entities/cliente.entity.ts — Modelo de tabla en BD
+
+dto/create-cliente.dto.ts — Validación para crear cliente
+
+dto/update-cliente.dto.ts — Validación para actualizar
+
+
+proyectos/ — Gestión de Proyectos
+
+proyectos.controller.ts — Endpoints CRUD de proyectos
+
+proyectos.service.ts — Lógica con relaciones a clientes
+
+entities/proyecto.entity.ts — Tabla proyectos (relación con clientes)
+
+dto/ — Validaciones de entrada
+
+
+tareas/ — Gestión de Tareas
+
+tareas.controller.ts — Endpoints CRUD de tareas
+
+tareas.service.ts — Lógica con relaciones a proyectos
+
+entities/tarea.entity.ts — Tabla tareas (PENDIENTE/FINALIZADA/BAJA)
+
+
+
+Frontend (Angular)
+
+Archivos de configuración (raíz)
+
+
+package.json — Dependencias (@angular, rxjs, etc.)
+
+angular.json — Configuración del proyecto Angular
+
+tsconfig*.json — Configuración TypeScript
+
+
+src/app/ — Estructura principal
+
+main.ts — Punto de entrada de Angular
+
+app.config.ts — Configuración global (proveedores)
+
+app.routes.ts — Rutas de la aplicación
+app.ts — Componente raíz
+
+
+core/ — Funcionalidad compartida
+
+
+guards/auth.guard.ts — Protege rutas: requiere login
+
+interceptors/auth-interceptor.ts — Agrega token JWT a las peticiones
+
+services/auth-store.ts — Guarda token en localStorage
+
+
+features/auth/login/ — Login
+
+login.ts — Componente: formulario y lógica
+
+login.html — Template del formulario
+
+login.css — Estilos del login
+
+login-api-client.ts — Servicio que llama al backend
+
+
+
+features/clientes/ — Gestión de Clientes
+
+clientes.component.ts — Lógica (listar, crear, editar, eliminar)
+
+clientes.component.html — Vista con tabla y formularios
+
+clientes.component.css — Estilos
+
+cliente.service.ts — Servicio HTTP al backend
+
+cliente.model.ts — Interface de Cliente
+
+
+features/proyectos/ — Gestión de Proyectos
+
+proyectos.component.* — Vista principal de proyectos
+
+proyecto.service.ts — Servicio HTTP
+
+proyecto.model.ts — Interfaces
+
+proyecto-tareas.component.* — Vista de tareas de un proyecto
+
+
+features/tareas/ — Gestión de Tareas
+
+tareas.component.ts — Lógica de tareas agrupadas por proyecto
+
+tareas.component.html — Cards agrupadas por proyecto
+
+tareas.component.css — Grid layout y estilos
+
+tarea.service.ts — Servicio HTTP
+
+tarea.model.ts — Enum de estados
+
+
+
+features/layout/ — Layout compartido
+
+layout.component.* — Barra lateral con navegación
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Des_Web_TFI
 
 Desarrollo de Aplicaciones Web - 2026 Tecnicatura Universitaria en Desarrollo Web
