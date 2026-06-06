@@ -5,12 +5,14 @@ import { ProyectosController } from './proyectos.controller';
 import { Proyecto } from './entities/proyecto.entity';
 import { ClientesModule } from '../clientes/clientes.module';
 import { TareasModule } from '../tareas/tareas.module';
+import { HistorialModule } from '../historial/historial.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Proyecto]),
     forwardRef(() => ClientesModule),
     forwardRef(() => TareasModule),
+    HistorialModule,
   ],
   providers: [ProyectosService],
   controllers: [ProyectosController],

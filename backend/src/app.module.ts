@@ -12,6 +12,8 @@ import { Usuario } from './usuarios/entities/usuario.entity';
 import { Cliente } from './clientes/entities/cliente.entity';
 import { Proyecto } from './proyectos/entities/proyecto.entity';
 import { Tarea } from './tareas/entities/tarea.entity';
+import { HistorialModule } from './historial/historial.module';
+import { HistorialCambio } from './historial/entities/historial-cambio.entity';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { Tarea } from './tareas/entities/tarea.entity';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_DATABASE || 'gestion_proyectos',
-      entities: [Usuario, Cliente, Proyecto, Tarea],
+      entities: [Usuario, Cliente, Proyecto, Tarea, HistorialCambio],
       synchronize: false, // Usar migraciones en producción
     }),
     AuthModule,
@@ -33,6 +35,7 @@ import { Tarea } from './tareas/entities/tarea.entity';
     ClientesModule,
     ProyectosModule,
     TareasModule,
+    HistorialModule,
   ],
   controllers: [AppController],
   providers: [AppService],

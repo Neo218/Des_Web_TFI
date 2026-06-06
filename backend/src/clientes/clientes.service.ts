@@ -7,6 +7,7 @@ import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { ProyectosService } from '../proyectos/proyectos.service';
 import { ListClienteDto } from './dto/list-cliente.dto';
+import { HistorialService, UsuarioAutenticado } from '../historial/historial.service';
 
 @Injectable()
 export class ClientesService {
@@ -15,9 +16,10 @@ export class ClientesService {
     private clientesRepository: Repository<Cliente>,
     @Inject(forwardRef(() => ProyectosService))
     private readonly proyectosService: ProyectosService,
+    private readonly historialService: HistorialService,
   ) {}
 
-  async create(createClienteDto: CreateClienteDto): Promise<{ id: number }> {
+  async create(createClienteDto: CreateClienteDto, usuario?: UsuarioAutenticado): Promise<{ id: number }> {
     const existing = await this.clientesRepository.findOne({
       where: { nombre: createClienteDto.nombre },
     });
@@ -28,6 +30,13 @@ export class ClientesService {
 
     const cliente = this.clientesRepository.create(createClienteDto);
     const saved = await this.clientesRepository.save(cliente);
+    await this.historialService.registrarCambio({
+      entidad: 'Clientes',
+      idRegistro: saved.id,
+      accion: 'CREACION',
+      usuario,
+      detalle: { despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado } },
+    });
     return { id: saved.id };
   }
 
@@ -46,8 +55,9 @@ export class ClientesService {
     return { id: cliente.id, nombre: cliente.nombre, estado: cliente.estado };
   }
 
-  async update(id: number, updateClienteDto: UpdateClienteDto): Promise<ListClienteDto> {
+  async update(id: number, updateClienteDto: UpdateClienteDto, usuario?: UsuarioAutenticado): Promise<ListClienteDto> {
     const cliente = await this._findOneEntity(id);
+    const antes = { id: cliente.id, nombre: cliente.nombre, estado: cliente.estado };
 
     // Validar que no se pueda dar de baja un cliente con proyectos relacionados
     if (updateClienteDto.estado === EstadoCliente.BAJA) {
@@ -59,15 +69,30 @@ export class ClientesService {
 
     Object.assign(cliente, updateClienteDto);
     const saved = await this.clientesRepository.save(cliente);
+    await this.historialService.registrarCambio({
+      entidad: 'Clientes',
+      idRegistro: saved.id,
+      accion: 'MODIFICACION',
+      usuario,
+      detalle: { antes, despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado } },
+    });
     return { id: saved.id, nombre: saved.nombre, estado: saved.estado };
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, usuario?: UsuarioAutenticado): Promise<void> {
     const cliente = await this._findOneEntity(id);
+    const antes = { id: cliente.id, nombre: cliente.nombre, estado: cliente.estado };
 
     // Verificar que el cliente no esté asociado a ningún proyecto
     // Esto se manejará en el módulo de proyectos o con una constraint en la DB
     await this.clientesRepository.remove(cliente);
+    await this.historialService.registrarCambio({
+      entidad: 'Clientes',
+      idRegistro: id,
+      accion: 'ELIMINACION',
+      usuario,
+      detalle: { antes },
+    });
   }
 
   async existeClienteActivoPorId(id: number): Promise<boolean> {

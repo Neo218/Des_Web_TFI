@@ -5,15 +5,17 @@ import * as bcrypt from 'bcrypt';
 import { Usuario } from './entities/usuario.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { HistorialService, UsuarioAutenticado } from '../historial/historial.service';
 
 @Injectable()
 export class UsuariosService {
   constructor(
     @InjectRepository(Usuario)
     private usuariosRepository: Repository<Usuario>,
+    private readonly historialService: HistorialService,
   ) {}
 
-  async create(createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
+  async create(createUsuarioDto: CreateUsuarioDto, usuarioAutenticado?: UsuarioAutenticado): Promise<Usuario> {
     const existing = await this.usuariosRepository.findOne({
       where: { nombre: createUsuarioDto.nombre },
     });
@@ -28,7 +30,15 @@ export class UsuariosService {
       clave: hashedPassword,
     });
 
-    return this.usuariosRepository.save(usuario);
+    const saved = await this.usuariosRepository.save(usuario);
+    await this.historialService.registrarCambio({
+      entidad: 'Usuarios',
+      idRegistro: saved.id,
+      accion: 'CREACION',
+      usuario: usuarioAutenticado,
+      detalle: { despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado } },
+    });
+    return saved;
   }
 
   async findAll(): Promise<Usuario[]> {
@@ -43,8 +53,9 @@ export class UsuariosService {
     return usuario;
   }
 
-  async update(id: number, updateUsuarioDto: UpdateUsuarioDto): Promise<Usuario> {
+  async update(id: number, updateUsuarioDto: UpdateUsuarioDto, usuarioAutenticado?: UsuarioAutenticado): Promise<Usuario> {
     const usuario = await this.findOne(id);
+    const antes = { id: usuario.id, nombre: usuario.nombre, estado: usuario.estado };
 
     const dto = updateUsuarioDto as any;
     if (dto.clave) {
@@ -52,11 +63,27 @@ export class UsuariosService {
     }
 
     Object.assign(usuario, updateUsuarioDto);
-    return this.usuariosRepository.save(usuario);
+    const saved = await this.usuariosRepository.save(usuario);
+    await this.historialService.registrarCambio({
+      entidad: 'Usuarios',
+      idRegistro: saved.id,
+      accion: 'MODIFICACION',
+      usuario: usuarioAutenticado,
+      detalle: { antes, despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado } },
+    });
+    return saved;
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, usuarioAutenticado?: UsuarioAutenticado): Promise<void> {
     const usuario = await this.findOne(id);
+    const antes = { id: usuario.id, nombre: usuario.nombre, estado: usuario.estado };
     await this.usuariosRepository.remove(usuario);
+    await this.historialService.registrarCambio({
+      entidad: 'Usuarios',
+      idRegistro: id,
+      accion: 'ELIMINACION',
+      usuario: usuarioAutenticado,
+      detalle: { antes },
+    });
   }
 }
