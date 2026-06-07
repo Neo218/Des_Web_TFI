@@ -31,7 +31,7 @@ export class ClienteService {
     return this.http.put<Cliente>(`${this.apiUrl}/${id}`, cliente);
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: number): Observable<Cliente> {
+    return this.http.delete<Cliente>(`${this.apiUrl}/${id}`);
   }
 }

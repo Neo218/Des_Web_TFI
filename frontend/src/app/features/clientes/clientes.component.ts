@@ -20,6 +20,8 @@ export class ClientesComponent implements OnInit {
   clientes: Cliente[] = [];
   loading = signal(false);
   showForm = signal(false);
+  errorMessage = signal('');
+  successMessage = signal('');
   editingId: number | null = null;
 
   clienteForm = this.fb.nonNullable.group({
@@ -30,7 +32,6 @@ export class ClientesComponent implements OnInit {
   EstadoCliente = EstadoCliente;
 
   ngOnInit(): void {
-    console.log('ClientesComponent - ngOnInit llamado');
     this.loadClientes();
     if (this.route.snapshot.queryParams['create'] === 'true') {
       this.showCreateForm();
@@ -39,43 +40,42 @@ export class ClientesComponent implements OnInit {
 
   loadClientes(): void {
     this.loading.set(true);
-    console.log('Cargando clientes...');
-    const subscription = this.clienteService.getAll().subscribe({
+    this.clienteService.getAll().subscribe({
       next: (data) => {
-        console.log('Clientes recibidos:', data);
         this.clientes = data;
         this.loading.set(false);
-        console.log('Loading ahora es false');
       },
       error: (err) => {
-        console.error('Error al cargar clientes:', err);
+        this.errorMessage.set(this.getErrorMessage(err, 'No se pudieron cargar los clientes.'));
         this.loading.set(false);
       },
-      complete: () => {
-        console.log('Observable completado');
-      },
     });
-    console.log('Suscripción creada:', subscription);
   }
 
   showCreateForm(): void {
+    this.clearMessages();
     this.editingId = null;
-    this.clienteForm.reset({ estado: EstadoCliente.ACTIVO });
+    this.clienteForm.reset({ nombre: '', estado: EstadoCliente.ACTIVO });
     this.showForm.set(true);
   }
 
   editCliente(cliente: Cliente): void {
+    this.clearMessages();
     this.editingId = cliente.id || null;
-    this.clienteForm.patchValue(cliente);
+    this.clienteForm.patchValue({
+      nombre: cliente.nombre,
+      estado: cliente.estado,
+    });
     this.showForm.set(true);
   }
 
   saveCliente(): void {
     if (this.clienteForm.invalid) return;
+    this.clearMessages();
 
     const rawValue = this.clienteForm.getRawValue();
     const data: Omit<Cliente, 'id'> = {
-      nombre: rawValue.nombre,
+      nombre: rawValue.nombre.trim(),
       estado: rawValue.estado,
     };
 
@@ -84,35 +84,63 @@ export class ClientesComponent implements OnInit {
         next: () => {
           this.loadClientes();
           this.cancelForm();
+          this.successMessage.set('Cliente actualizado correctamente.');
+        },
+        error: (err) => {
+          this.errorMessage.set(this.getErrorMessage(err, 'No se pudo actualizar el cliente.'));
         },
       });
-    } else {
-      this.clienteService.create(data).subscribe({
-        next: () => {
-          this.loadClientes();
-          this.cancelForm();
-        },
-      });
+      return;
     }
+
+    this.clienteService.create(data).subscribe({
+      next: () => {
+        this.loadClientes();
+        this.cancelForm();
+        this.successMessage.set('Cliente creado correctamente.');
+      },
+      error: (err) => {
+        this.errorMessage.set(this.getErrorMessage(err, 'No se pudo crear el cliente.'));
+      },
+    });
   }
 
   deleteCliente(id: number): void {
-    if (confirm('¿Está seguro de eliminar este cliente?')) {
-      this.clienteService.delete(id).subscribe({
-        next: () => {
-          this.loadClientes();
-        },
-      });
-    }
+    this.clearMessages();
+    if (!confirm('Esta seguro de dar de baja este cliente?')) return;
+
+    this.clienteService.delete(id).subscribe({
+      next: () => {
+        this.loadClientes();
+        this.successMessage.set('Cliente dado de baja correctamente.');
+      },
+      error: (err) => {
+        this.errorMessage.set(this.getErrorMessage(err, 'No se pudo dar de baja el cliente.'));
+      },
+    });
   }
 
   cancelForm(): void {
     this.showForm.set(false);
-    this.clienteForm.reset();
+    this.clienteForm.reset({ nombre: '', estado: EstadoCliente.ACTIVO });
     this.editingId = null;
   }
 
   getEstadoClass(estado: EstadoCliente): string {
     return estado === EstadoCliente.ACTIVO ? 'badge-active' : 'badge-inactive';
+  }
+
+  private clearMessages(): void {
+    this.errorMessage.set('');
+    this.successMessage.set('');
+  }
+
+  private getErrorMessage(error: any, fallback: string): string {
+    const message = error?.error?.message;
+    if (Array.isArray(message)) {
+      return message.join(' ');
+    }
+
+    return message || fallback;
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException, forwardRef, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Proyecto, EstadoProyecto } from './entities/proyecto.entity';
 import { CreateProyectoDto } from './dto/create-proyecto.dto';
 import { UpdateProyectoDto } from './dto/update-proyecto.dto';
@@ -212,7 +212,6 @@ export class ProyectosService {
     const existe = await this.proyectosRepository.exists({
       where: {
         cliente: { id: idCliente },
-        estado: In([EstadoProyecto.ACTIVO, EstadoProyecto.FINALIZADO]),
       },
     });
     return existe;
