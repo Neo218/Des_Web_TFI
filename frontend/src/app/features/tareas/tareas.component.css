@@ -460,3 +460,62 @@ select.form-control {
   font-size: 1.5rem;
   opacity: 0.5;
 }
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.filter-search {
+  position: relative;
+  flex: 2;
+  min-width: 200px;
+}
+
+.filter-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.filter-input {
+  padding-left: 2.25rem !important;
+  width: 100%;
+}
+
+.filter-select {
+  flex: 1;
+  min-width: 150px;
+}
+
+.btn-limpiar {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.btn-limpiar:hover {
+  background: rgba(239, 68, 68, 0.22);
+}
+
+@media (max-width: 640px) {
+  .filter-bar { flex-direction: column; }
+  .filter-search, .filter-select { width: 100%; }
+}

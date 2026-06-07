@@ -11,13 +11,35 @@
   </div>
 
   <div class="filter-bar">
-    <label>📁 Filtrar por proyecto:</label>
-    <select [value]="filterProyecto || ''" (change)="onFilterChange($event)" class="form-control">
+    <div class="filter-search">
+      <span class="filter-search-icon">🔍</span>
+      <input
+        type="text"
+        class="form-control filter-input"
+        placeholder="Buscar por tarea, proyecto o cliente..."
+        [(ngModel)]="filtroBusqueda"
+      />
+    </div>
+  
+    <select class="form-control filter-select" [(ngModel)]="filtroEstado">
+      <option value="">Todos los estados</option>
+      <option value="PENDIENTE">⏳ Pendiente</option>
+      <option value="FINALIZADA">✅ Finalizada</option>
+      <option value="BAJA">❌ Baja</option>
+    </select>
+  
+    <select class="form-control filter-select" [value]="filterProyecto || ''" (change)="onFilterChange($event)">
       <option value="">Todos los proyectos</option>
       @for (proyecto of proyectos; track proyecto.id) {
-      <option [value]="proyecto.id">{{ proyecto.nombre }}</option>
+        <option [value]="proyecto.id">{{ proyecto.nombre }}</option>
       }
     </select>
+  
+    @if (hayFiltrosActivos) {
+      <button type="button" class="btn btn-limpiar" (click)="limpiarFiltros()">
+        ✕ Limpiar
+      </button>
+    }
   </div>
 
   @if (showForm()) {

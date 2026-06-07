@@ -1,11 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TareaService, CreateTareaDto, UpdateTareaDto } from './tarea.service';
 import { ProyectoService } from '../proyectos/proyecto.service';
 import { Tarea, EstadoTarea } from './tarea.model';
 import { Proyecto } from '../proyectos/proyecto.model';
+
 
 interface ProyectoAgrupado {
   id: number;
@@ -19,7 +20,7 @@ interface ProyectoAgrupado {
 @Component({
   selector: 'app-tareas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './tareas.component.html',
   styleUrls: ['./tareas.component.css'],
 })
@@ -37,6 +38,9 @@ export class TareasComponent implements OnInit {
   editingId: number | null = null;
   filterProyecto: number | null = null;
 
+  filtroBusqueda = '';
+  filtroEstado = '';
+
   tareaForm = this.fb.nonNullable.group({
     descripcion: ['', Validators.required],
     estado: [EstadoTarea.PENDIENTE, Validators.required],
@@ -44,6 +48,29 @@ export class TareasComponent implements OnInit {
   });
 
   EstadoTarea = EstadoTarea;
+
+  get tareasFiltradas(): Tarea[] {
+    const busqueda = this.filtroBusqueda.toLowerCase().trim();
+    return this.tareas.filter(t => {
+      const matchEstado   = !this.filtroEstado || t.estado === this.filtroEstado;
+      const matchBusqueda = !busqueda
+        || t.descripcion.toLowerCase().includes(busqueda)
+        || t.proyecto?.nombre?.toLowerCase().includes(busqueda)
+        || t.proyecto?.cliente?.nombre?.toLowerCase().includes(busqueda);
+      return matchEstado && matchBusqueda;
+    });
+  }
+  
+  get hayFiltrosActivos(): boolean {
+    return !!(this.filtroBusqueda || this.filtroEstado || this.filterProyecto);
+  }
+  
+  limpiarFiltros(): void {
+    this.filtroBusqueda = '';
+    this.filtroEstado = '';
+    this.filterProyecto = null;
+    this.loadTareas();
+  }
 
   ngOnInit(): void {
     this.loadProyectos();
@@ -216,7 +243,7 @@ export class TareasComponent implements OnInit {
     }
 
     // Agregar tareas a sus proyectos
-    for (const tarea of this.tareas) {
+    for (const tarea of this.tareasFiltradas) {
       const agrupado = agrupadas.get(tarea.proyecto?.id || 0);
       if (agrupado) {
         agrupado.tareas.push(tarea);
