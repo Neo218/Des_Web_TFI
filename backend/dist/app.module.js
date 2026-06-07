@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
@@ -21,7 +24,16 @@ const usuario_entity_1 = require("./usuarios/entities/usuario.entity");
 const cliente_entity_1 = require("./clientes/entities/cliente.entity");
 const proyecto_entity_1 = require("./proyectos/entities/proyecto.entity");
 const tarea_entity_1 = require("./tareas/entities/tarea.entity");
+const historial_module_1 = require("./historial/historial.module");
+const historial_cambio_entity_1 = require("./historial/entities/historial-cambio.entity");
 let AppModule = class AppModule {
+    constructor() {
+        console.log('DB_HOST=', process.env.DB_HOST);
+        console.log('DB_PORT=', process.env.DB_PORT);
+        console.log('DB_USERNAME=', process.env.DB_USERNAME);
+        console.log('DB_PASSWORD=', process.env.DB_PASSWORD);
+        console.log('DB_DATABASE=', process.env.DB_DATABASE);
+    }
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
@@ -37,7 +49,7 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USERNAME || 'postgres',
                 password: process.env.DB_PASSWORD || 'postgres',
                 database: process.env.DB_DATABASE || 'gestion_proyectos',
-                entities: [usuario_entity_1.Usuario, cliente_entity_1.Cliente, proyecto_entity_1.Proyecto, tarea_entity_1.Tarea],
+                entities: [usuario_entity_1.Usuario, cliente_entity_1.Cliente, proyecto_entity_1.Proyecto, tarea_entity_1.Tarea, historial_cambio_entity_1.HistorialCambio],
                 synchronize: false,
             }),
             auth_module_1.AuthModule,
@@ -45,9 +57,11 @@ exports.AppModule = AppModule = __decorate([
             clientes_module_1.ClientesModule,
             proyectos_module_1.ProyectosModule,
             tareas_module_1.TareasModule,
+            historial_module_1.HistorialModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
-    })
+    }),
+    __metadata("design:paramtypes", [])
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

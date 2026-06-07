@@ -14,6 +14,23 @@ export class AuthStore {
   obtenerToken(): string | null {
     return sessionStorage.getItem('token');
   }
+  obtenerPayload() {
+  const token = this.obtenerToken();
+
+  if (!token) {
+    return null;
+  }
+
+  return JSON.parse(atob(token.split('.')[1]));
+  }
+  
+  obtenerUsuario(): string {
+    return this.obtenerPayload()?.nombre || '';
+  }
+  
+  obtenerRol(): string {
+    return this.obtenerPayload()?.rol || '';
+  }
 
   cerrarSesion(): void {
     sessionStorage.removeItem('token');

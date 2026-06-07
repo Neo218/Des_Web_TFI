@@ -63,17 +63,19 @@ let AuthService = class AuthService {
         const usuario = await this.usuariosRepository.findOne({
             where: { nombre: loginDto.nombre },
         });
+        console.log('USUARIO ENCONTRADO:', usuario);
         if (!usuario) {
             throw new common_1.UnauthorizedException('Credenciales inválidas');
         }
         const claveValida = await bcrypt.compare(loginDto.clave, usuario.clave);
+        console.log('CLAVE VALIDA:', claveValida);
         if (!claveValida) {
             throw new common_1.UnauthorizedException('Credenciales inválidas');
         }
         if (usuario.estado !== 'ACTIVO') {
             throw new common_1.UnauthorizedException('Usuario no está activo');
         }
-        const payload = { sub: usuario.id, nombre: usuario.nombre };
+        const payload = { sub: usuario.id, nombre: usuario.nombre, rol: usuario.rol, };
         return {
             access_token: await this.jwtService.signAsync(payload),
         };

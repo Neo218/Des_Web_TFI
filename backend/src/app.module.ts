@@ -28,7 +28,7 @@ import { HistorialCambio } from './historial/entities/historial-cambio.entity';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_DATABASE || 'gestion_proyectos',
       entities: [Usuario, Cliente, Proyecto, Tarea, HistorialCambio],
-      synchronize: false, // Usar migraciones en producción
+      synchronize: false,
     }),
     AuthModule,
     UsuariosModule,
@@ -40,4 +40,12 @@ import { HistorialCambio } from './historial/entities/historial-cambio.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    console.log('DB_HOST=', process.env.DB_HOST);
+    console.log('DB_PORT=', process.env.DB_PORT);
+    console.log('DB_USERNAME=', process.env.DB_USERNAME);
+    console.log('DB_PASSWORD=', process.env.DB_PASSWORD);
+    console.log('DB_DATABASE=', process.env.DB_DATABASE);
+  }
+}

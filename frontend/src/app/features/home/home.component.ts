@@ -8,6 +8,7 @@ import { ProyectoService } from '../proyectos/proyecto.service';
 import { EstadoProyecto, Proyecto } from '../proyectos/proyecto.model';
 import { TareaService } from '../tareas/tarea.service';
 import { EstadoTarea } from '../tareas/tarea.model';
+import { AuthStore } from '../../core/services/auth-store';
 
 interface EstadisticasGenerales {
   clientesActivos: number;
@@ -41,7 +42,9 @@ export class HomeComponent implements OnInit {
   private clienteService = inject(ClienteService);
   private proyectoService = inject(ProyectoService);
   private tareaService = inject(TareaService);
-
+  private authStore = inject(AuthStore);
+  usuario = '';
+  rol = '';
   loading = signal(false);
   error = signal('');
 
@@ -61,6 +64,8 @@ export class HomeComponent implements OnInit {
   proyectosPorCliente: ProyectosPorCliente[] = [];
 
   ngOnInit(): void {
+    this.usuario = this.authStore.obtenerUsuario();
+    this.rol = this.authStore.obtenerRol();
     this.loadEstadisticas();
   }
 

@@ -23,8 +23,8 @@ let TareasController = class TareasController {
     constructor(tareasService) {
         this.tareasService = tareasService;
     }
-    create(createTareaDto) {
-        return this.tareasService.create(createTareaDto);
+    create(createTareaDto, req) {
+        return this.tareasService.create(createTareaDto, req.user);
     }
     findAll() {
         return this.tareasService.findAll();
@@ -35,19 +35,20 @@ let TareasController = class TareasController {
     findOne(id) {
         return this.tareasService.findOne(+id);
     }
-    update(id, updateTareaDto) {
-        return this.tareasService.update(+id, updateTareaDto);
+    update(id, updateTareaDto, req) {
+        return this.tareasService.update(+id, updateTareaDto, req.user);
     }
-    remove(id) {
-        return this.tareasService.remove(+id);
+    remove(id, req) {
+        return this.tareasService.remove(+id, req.user);
     }
 };
 exports.TareasController = TareasController;
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_tarea_dto_1.CreateTareaDto]),
+    __metadata("design:paramtypes", [create_tarea_dto_1.CreateTareaDto, Object]),
     __metadata("design:returntype", void 0)
 ], TareasController.prototype, "create", null);
 __decorate([
@@ -74,15 +75,17 @@ __decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_tarea_dto_1.UpdateTareaDto]),
+    __metadata("design:paramtypes", [String, update_tarea_dto_1.UpdateTareaDto, Object]),
     __metadata("design:returntype", void 0)
 ], TareasController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], TareasController.prototype, "remove", null);
 exports.TareasController = TareasController = __decorate([

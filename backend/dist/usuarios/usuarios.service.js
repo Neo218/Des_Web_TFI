@@ -51,12 +51,15 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const bcrypt = __importStar(require("bcrypt"));
 const usuario_entity_1 = require("./entities/usuario.entity");
+const historial_service_1 = require("../historial/historial.service");
 let UsuariosService = class UsuariosService {
     usuariosRepository;
-    constructor(usuariosRepository) {
+    historialService;
+    constructor(usuariosRepository, historialService) {
         this.usuariosRepository = usuariosRepository;
+        this.historialService = historialService;
     }
-    async create(createUsuarioDto) {
+    async create(createUsuarioDto, usuarioAutenticado) {
         const existing = await this.usuariosRepository.findOne({
             where: { nombre: createUsuarioDto.nombre },
         });
@@ -68,7 +71,15 @@ let UsuariosService = class UsuariosService {
             ...createUsuarioDto,
             clave: hashedPassword,
         });
-        return this.usuariosRepository.save(usuario);
+        const saved = await this.usuariosRepository.save(usuario);
+        await this.historialService.registrarCambio({
+            entidad: 'Usuarios',
+            idRegistro: saved.id,
+            accion: 'CREACION',
+            usuario: usuarioAutenticado,
+            detalle: { despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado } },
+        });
+        return saved;
     }
     async findAll() {
         return this.usuariosRepository.find();
@@ -80,24 +91,42 @@ let UsuariosService = class UsuariosService {
         }
         return usuario;
     }
-    async update(id, updateUsuarioDto) {
+    async update(id, updateUsuarioDto, usuarioAutenticado) {
         const usuario = await this.findOne(id);
+        const antes = { id: usuario.id, nombre: usuario.nombre, estado: usuario.estado };
         const dto = updateUsuarioDto;
         if (dto.clave) {
             dto.clave = await bcrypt.hash(dto.clave, 10);
         }
         Object.assign(usuario, updateUsuarioDto);
-        return this.usuariosRepository.save(usuario);
+        const saved = await this.usuariosRepository.save(usuario);
+        await this.historialService.registrarCambio({
+            entidad: 'Usuarios',
+            idRegistro: saved.id,
+            accion: 'MODIFICACION',
+            usuario: usuarioAutenticado,
+            detalle: { antes, despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado } },
+        });
+        return saved;
     }
-    async remove(id) {
+    async remove(id, usuarioAutenticado) {
         const usuario = await this.findOne(id);
+        const antes = { id: usuario.id, nombre: usuario.nombre, estado: usuario.estado };
         await this.usuariosRepository.remove(usuario);
+        await this.historialService.registrarCambio({
+            entidad: 'Usuarios',
+            idRegistro: id,
+            accion: 'ELIMINACION',
+            usuario: usuarioAutenticado,
+            detalle: { antes },
+        });
     }
 };
 exports.UsuariosService = UsuariosService;
 exports.UsuariosService = UsuariosService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(usuario_entity_1.Usuario)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        historial_service_1.HistorialService])
 ], UsuariosService);
 //# sourceMappingURL=usuarios.service.js.map

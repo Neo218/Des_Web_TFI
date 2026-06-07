@@ -6,7 +6,7 @@
     "start": "ng serve --proxy-config proxy.conf.json",
     "compodoc": "npx compodoc -p tsconfig.doc.json -d documentation -s -w",
     "deploy": "npm run build && npm run nginx:copy",
-    "nginx:copy": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Copy-Item -Path dist/frontend/browser/* -Destination C:/nginx-1.31.1/html -Recurse -Force\"",
+    "nginx:copy": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Copy-Item -Path dist/frontend/browser/* -Destination D:/nginx-1.31.1/html -Recurse -Force\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

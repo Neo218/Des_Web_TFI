@@ -19,16 +19,19 @@ const typeorm_2 = require("typeorm");
 const proyecto_entity_1 = require("./entities/proyecto.entity");
 const clientes_service_1 = require("../clientes/clientes.service");
 const tareas_service_1 = require("../tareas/tareas.service");
+const historial_service_1 = require("../historial/historial.service");
 let ProyectosService = class ProyectosService {
     proyectosRepository;
     clientesService;
     tareasService;
-    constructor(proyectosRepository, clientesService, tareasService) {
+    historialService;
+    constructor(proyectosRepository, clientesService, tareasService, historialService) {
         this.proyectosRepository = proyectosRepository;
         this.clientesService = clientesService;
         this.tareasService = tareasService;
+        this.historialService = historialService;
     }
-    async create(createProyectoDto) {
+    async create(createProyectoDto, usuario) {
         const existing = await this.proyectosRepository.findOne({
             where: { nombre: createProyectoDto.nombre },
         });
@@ -43,6 +46,20 @@ let ProyectosService = class ProyectosService {
         }
         const proyecto = this.proyectosRepository.create(createProyectoDto);
         const saved = await this.proyectosRepository.save(proyecto);
+        await this.historialService.registrarCambio({
+            entidad: 'Proyectos',
+            idRegistro: saved.id,
+            accion: 'CREACION',
+            usuario,
+            detalle: {
+                despues: {
+                    id: saved.id,
+                    nombre: saved.nombre,
+                    estado: saved.estado,
+                    id_cliente: saved.id_cliente ?? null,
+                },
+            },
+        });
         return { id: saved.id };
     }
     async findAll() {
@@ -110,8 +127,15 @@ let ProyectosService = class ProyectosService {
         }
         return dto;
     }
-    async update(id, updateProyectoDto) {
+    async update(id, updateProyectoDto, usuario) {
         const proyecto = await this._findOneEntity(id);
+        const antes = {
+            id: proyecto.id,
+            nombre: proyecto.nombre,
+            estado: proyecto.estado,
+            id_cliente: proyecto.id_cliente ?? null,
+            cliente: proyecto.cliente?.nombre ?? null,
+        };
         if (updateProyectoDto.id_cliente) {
             const clienteActivo = await this.clientesService.existeClienteActivoPorId(updateProyectoDto.id_cliente);
             if (!clienteActivo) {
@@ -120,6 +144,21 @@ let ProyectosService = class ProyectosService {
         }
         Object.assign(proyecto, updateProyectoDto);
         const saved = await this.proyectosRepository.save(proyecto);
+        await this.historialService.registrarCambio({
+            entidad: 'Proyectos',
+            idRegistro: saved.id,
+            accion: 'MODIFICACION',
+            usuario,
+            detalle: {
+                antes,
+                despues: {
+                    id: saved.id,
+                    nombre: saved.nombre,
+                    estado: saved.estado,
+                    id_cliente: saved.id_cliente ?? null,
+                },
+            },
+        });
         const dto = {
             id: saved.id,
             nombre: saved.nombre,
@@ -134,19 +173,32 @@ let ProyectosService = class ProyectosService {
         }
         return dto;
     }
-    async remove(id) {
+    async remove(id, usuario) {
         const proyecto = await this._findOneEntity(id);
+        const antes = {
+            id: proyecto.id,
+            nombre: proyecto.nombre,
+            estado: proyecto.estado,
+            id_cliente: proyecto.id_cliente ?? null,
+            cliente: proyecto.cliente?.nombre ?? null,
+        };
         const tieneTareas = await this.tareasService.existeTareaPorIdProyecto(id);
         if (tieneTareas) {
             throw new common_1.BadRequestException('No se puede eliminar: el proyecto tiene tareas asociadas');
         }
         await this.proyectosRepository.remove(proyecto);
+        await this.historialService.registrarCambio({
+            entidad: 'Proyectos',
+            idRegistro: id,
+            accion: 'ELIMINACION',
+            usuario,
+            detalle: { antes },
+        });
     }
     async existeProyectoPorIdCliente(idCliente) {
         const existe = await this.proyectosRepository.exists({
             where: {
                 cliente: { id: idCliente },
-                estado: (0, typeorm_2.In)([proyecto_entity_1.EstadoProyecto.ACTIVO, proyecto_entity_1.EstadoProyecto.FINALIZADO]),
             },
         });
         return existe;
@@ -170,6 +222,7 @@ exports.ProyectosService = ProyectosService = __decorate([
     __param(2, (0, common_1.Inject)((0, common_1.forwardRef)(() => tareas_service_1.TareasService))),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         clientes_service_1.ClientesService,
-        tareas_service_1.TareasService])
+        tareas_service_1.TareasService,
+        historial_service_1.HistorialService])
 ], ProyectosService);
 //# sourceMappingURL=proyectos.service.js.map

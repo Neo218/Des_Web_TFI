@@ -4,6 +4,10 @@ export enum EstadoUsuario {
   ACTIVO = 'ACTIVO',
   BAJA = 'BAJA',
 }
+export enum RolUsuario {
+  ADMIN = 'ADMIN',
+  USUARIO = 'USUARIO',
+}
 
 @Entity('usuarios')
 export class Usuario {
@@ -22,4 +26,10 @@ export class Usuario {
     default: EstadoUsuario.ACTIVO,
   })
   estado: EstadoUsuario;
+
+  @Column({
+    type: 'text',
+    default: RolUsuario.USUARIO,
+  })
+  rol: RolUsuario;
 }

@@ -9,18 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Usuario = exports.EstadoUsuario = void 0;
+exports.Usuario = exports.RolUsuario = exports.EstadoUsuario = void 0;
 const typeorm_1 = require("typeorm");
 var EstadoUsuario;
 (function (EstadoUsuario) {
     EstadoUsuario["ACTIVO"] = "ACTIVO";
     EstadoUsuario["BAJA"] = "BAJA";
 })(EstadoUsuario || (exports.EstadoUsuario = EstadoUsuario = {}));
+var RolUsuario;
+(function (RolUsuario) {
+    RolUsuario["ADMIN"] = "ADMIN";
+    RolUsuario["USUARIO"] = "USUARIO";
+})(RolUsuario || (exports.RolUsuario = RolUsuario = {}));
 let Usuario = class Usuario {
     id;
     nombre;
     clave;
     estado;
+    rol;
 };
 exports.Usuario = Usuario;
 __decorate([
@@ -43,6 +49,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Usuario.prototype, "estado", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'text',
+        default: RolUsuario.USUARIO,
+    }),
+    __metadata("design:type", String)
+], Usuario.prototype, "rol", void 0);
 exports.Usuario = Usuario = __decorate([
     (0, typeorm_1.Entity)('usuarios')
 ], Usuario);

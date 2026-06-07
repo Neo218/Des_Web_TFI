@@ -14,6 +14,7 @@ const proyectos_controller_1 = require("./proyectos.controller");
 const proyecto_entity_1 = require("./entities/proyecto.entity");
 const clientes_module_1 = require("../clientes/clientes.module");
 const tareas_module_1 = require("../tareas/tareas.module");
+const historial_module_1 = require("../historial/historial.module");
 let ProyectosModule = class ProyectosModule {
 };
 exports.ProyectosModule = ProyectosModule;
@@ -23,6 +24,7 @@ exports.ProyectosModule = ProyectosModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([proyecto_entity_1.Proyecto]),
             (0, common_1.forwardRef)(() => clientes_module_1.ClientesModule),
             (0, common_1.forwardRef)(() => tareas_module_1.TareasModule),
+            historial_module_1.HistorialModule,
         ],
         providers: [proyectos_service_1.ProyectosService],
         controllers: [proyectos_controller_1.ProyectosController],

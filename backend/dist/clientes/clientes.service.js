@@ -19,14 +19,17 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const cliente_entity_2 = require("./entities/cliente.entity");
 const proyectos_service_1 = require("../proyectos/proyectos.service");
+const historial_service_1 = require("../historial/historial.service");
 let ClientesService = class ClientesService {
     clientesRepository;
     proyectosService;
-    constructor(clientesRepository, proyectosService) {
+    historialService;
+    constructor(clientesRepository, proyectosService, historialService) {
         this.clientesRepository = clientesRepository;
         this.proyectosService = proyectosService;
+        this.historialService = historialService;
     }
-    async create(createClienteDto) {
+    async create(createClienteDto, usuario) {
         const existing = await this.clientesRepository.findOne({
             where: { nombre: createClienteDto.nombre },
         });
@@ -35,6 +38,13 @@ let ClientesService = class ClientesService {
         }
         const cliente = this.clientesRepository.create(createClienteDto);
         const saved = await this.clientesRepository.save(cliente);
+        await this.historialService.registrarCambio({
+            entidad: 'Clientes',
+            idRegistro: saved.id,
+            accion: 'CREACION',
+            usuario,
+            detalle: { despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado } },
+        });
         return { id: saved.id };
     }
     async findAll() {
@@ -49,8 +59,9 @@ let ClientesService = class ClientesService {
         const cliente = await this._findOneEntity(id);
         return { id: cliente.id, nombre: cliente.nombre, estado: cliente.estado };
     }
-    async update(id, updateClienteDto) {
+    async update(id, updateClienteDto, usuario) {
         const cliente = await this._findOneEntity(id);
+        const antes = { id: cliente.id, nombre: cliente.nombre, estado: cliente.estado };
         if (updateClienteDto.estado === cliente_entity_1.EstadoCliente.BAJA) {
             const relacionadoConProyectos = await this.proyectosService.existeProyectoPorIdCliente(id);
             if (relacionadoConProyectos) {
@@ -59,11 +70,35 @@ let ClientesService = class ClientesService {
         }
         Object.assign(cliente, updateClienteDto);
         const saved = await this.clientesRepository.save(cliente);
+        await this.historialService.registrarCambio({
+            entidad: 'Clientes',
+            idRegistro: saved.id,
+            accion: 'MODIFICACION',
+            usuario,
+            detalle: { antes, despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado } },
+        });
         return { id: saved.id, nombre: saved.nombre, estado: saved.estado };
     }
-    async remove(id) {
+    async remove(id, usuario) {
         const cliente = await this._findOneEntity(id);
-        await this.clientesRepository.remove(cliente);
+        const antes = { id: cliente.id, nombre: cliente.nombre, estado: cliente.estado };
+        const relacionadoConProyectos = await this.proyectosService.existeProyectoPorIdCliente(id);
+        if (relacionadoConProyectos) {
+            throw new common_1.BadRequestException('No se puede dar de baja un cliente con proyectos relacionados');
+        }
+        cliente.estado = cliente_entity_1.EstadoCliente.BAJA;
+        const saved = await this.clientesRepository.save(cliente);
+        await this.historialService.registrarCambio({
+            entidad: 'Clientes',
+            idRegistro: id,
+            accion: 'ELIMINACION',
+            usuario,
+            detalle: {
+                antes,
+                despues: { id: saved.id, nombre: saved.nombre, estado: saved.estado },
+            },
+        });
+        return { id: saved.id, nombre: saved.nombre, estado: saved.estado };
     }
     async existeClienteActivoPorId(id) {
         const existe = await this.clientesRepository.exists({
@@ -85,6 +120,7 @@ exports.ClientesService = ClientesService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(cliente_entity_2.Cliente)),
     __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => proyectos_service_1.ProyectosService))),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        proyectos_service_1.ProyectosService])
+        proyectos_service_1.ProyectosService,
+        historial_service_1.HistorialService])
 ], ClientesService);
 //# sourceMappingURL=clientes.service.js.map
