@@ -1,14 +1,15 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ClienteService } from './cliente.service';
 import { Cliente, EstadoCliente } from './cliente.model';
 import { AuthStore } from '../../core/services/auth-store';
+
 @Component({
   selector: 'app-clientes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.css'],
 })
@@ -17,7 +18,10 @@ export class ClientesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private clienteService = inject(ClienteService);
   private route = inject(ActivatedRoute);
-
+  searchTerm = '';
+  orden = 'asc';
+  paginaActual = 1;
+  clientesPorPagina = 5;
   clientes: Cliente[] = [];
   loading = signal(false);
   showForm = signal(false);
@@ -143,5 +147,28 @@ export class ClientesComponent implements OnInit {
     }
 
     return message || fallback;
+  }
+  get clientesFiltrados() {
+   return this.clientes.filter(cliente =>
+     cliente.nombre
+       .toLowerCase()
+       .includes(this.searchTerm.toLowerCase())
+   );
+  }
+  get clientesPaginados() {
+   const inicio =
+    (this.paginaActual - 1) * this.clientesPorPagina;
+
+   return this.clientesFiltrados.slice(
+    inicio,
+    inicio + this.clientesPorPagina
+   );
+  }
+  ordenarClientes(): void {
+   this.clientes.sort((a, b) =>
+     this.orden === 'asc'
+      ? a.nombre.localeCompare(b.nombre)
+      : b.nombre.localeCompare(a.nombre)
+   );
   }
 }

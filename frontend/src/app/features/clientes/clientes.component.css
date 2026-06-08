@@ -24,6 +24,13 @@
   font-size: 1.5rem;
 }
 
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+}
 .form-card {
   background: var(--bg-card);
   backdrop-filter: blur(10px);

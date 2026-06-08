@@ -6,6 +6,23 @@
       <span>+</span>
       <span>Nuevo Cliente</span>
     </button>
+    <div class="filter-bar">
+     <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="🔎 Buscar cliente..."
+      class="form-control"
+     />
+     <select
+       [(ngModel)]="orden"
+       (change)="ordenarClientes()"
+       class="form-control"
+       style="max-width: 180px;"
+      >
+       <option value="asc">Nombre A-Z</option>
+       <option value="desc">Nombre Z-A</option>
+      </select>
+    </div>
   }
   </div>
 
@@ -69,7 +86,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (cliente of clientes; track cliente.id) {
+          @for (cliente of clientesPaginados; track cliente.id) {
           <tr>
             <td>#{{ cliente.id }}</td>
             <td><strong>{{ cliente.nombre }}</strong></td>
@@ -97,6 +114,26 @@
         <p>Crea tu primer cliente para comenzar</p>
       </div>
       }
+      <div class="pagination">
+       <button
+        class="btn btn-secondary"
+        (click)="paginaActual = paginaActual - 1"
+        [disabled]="paginaActual === 1">
+   
+        ← Anterior
+       </button>
+   
+       <span style="margin: 0 1rem;">
+        Página {{ paginaActual }}
+       </span>
+   
+       <button
+        class="btn btn-secondary"
+        (click)="paginaActual = paginaActual + 1">
+   
+         Siguiente →
+       </button>
+      </div>
     </div>
   </ng-template>
 </div>
