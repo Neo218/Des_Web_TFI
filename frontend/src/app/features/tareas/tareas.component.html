@@ -9,10 +9,12 @@
         <span>CSV</span>
         <span>Exportar CSV</span>
       </button>
+      @if (authStore.esAdmin()) {
       <button (click)="showCreateForm()" class="btn btn-primary">
       <span>➕</span>
       <span>Nueva Tarea</span>
       </button>
+      }
     </div>
   </div>
 
@@ -26,7 +28,7 @@
     </select>
   </div>
 
-  @if (showForm()) {
+  @if (showForm() && authStore.esAdmin()) {
   <div class="form-card">
     <h3>@if (editingId) { ✏️ Editar Tarea } @else { ➕ Nueva Tarea }</h3>
     <form [formGroup]="tareaForm" (ngSubmit)="saveTarea()">
@@ -136,7 +138,7 @@
               @else if (tarea.estado === EstadoTarea.FINALIZADA) { Completada }
               @else { Baja }
             </span>
-            @if (tarea.estado !== EstadoTarea.BAJA) {
+            @if ((tarea.estado !== EstadoTarea.BAJA) && authStore.esAdmin()) {
             <button (click)="editTarea(tarea)" class="action-btn" title="Editar">✏️</button>
             <button (click)="deleteTarea(tarea.id!)" class="action-btn" title="Eliminar">🗑️</button>
             }

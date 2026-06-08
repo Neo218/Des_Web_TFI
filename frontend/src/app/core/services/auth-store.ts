@@ -31,6 +31,10 @@ export class AuthStore {
   obtenerRol(): string {
     return this.obtenerPayload()?.rol || '';
   }
+  
+  esAdmin(): boolean {
+    return this.obtenerRol() === 'ADMIN';
+  }
 
   cerrarSesion(): void {
     sessionStorage.removeItem('token');

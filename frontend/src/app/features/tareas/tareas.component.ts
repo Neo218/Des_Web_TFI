@@ -6,6 +6,7 @@ import { TareaService, CreateTareaDto, UpdateTareaDto } from './tarea.service';
 import { ProyectoService } from '../proyectos/proyecto.service';
 import { Tarea, EstadoTarea } from './tarea.model';
 import { Proyecto } from '../proyectos/proyecto.model';
+import { AuthStore } from '../../core/services/auth-store';
 
 interface ProyectoAgrupado {
   id: number;
@@ -29,6 +30,7 @@ export class TareasComponent implements OnInit {
   private proyectoService = inject(ProyectoService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  public authStore = inject(AuthStore);
 
   tareas: Tarea[] = [];
   proyectos: Proyecto[] = [];
@@ -46,6 +48,9 @@ export class TareasComponent implements OnInit {
   EstadoTarea = EstadoTarea;
 
   ngOnInit(): void {
+    console.log('Usuario:', this.authStore.obtenerUsuario());
+    console.log('Rol:', this.authStore.obtenerRol());
+    console.log('Es admin:', this.authStore.esAdmin());
     this.loadProyectos();
     this.loadTareas();
     if (this.route.snapshot.queryParams['create'] === 'true') {

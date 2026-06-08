@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ClienteService } from './cliente.service';
 import { Cliente, EstadoCliente } from './cliente.model';
-
+import { AuthStore } from '../../core/services/auth-store';
 @Component({
   selector: 'app-clientes',
   standalone: true,
@@ -13,6 +13,7 @@ import { Cliente, EstadoCliente } from './cliente.model';
   styleUrls: ['./clientes.component.css'],
 })
 export class ClientesComponent implements OnInit {
+  public authStore = inject(AuthStore);
   private fb = inject(FormBuilder);
   private clienteService = inject(ClienteService);
   private route = inject(ActivatedRoute);
