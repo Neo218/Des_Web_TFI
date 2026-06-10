@@ -16,6 +16,7 @@
           <label>Nombre del proyecto</label>
           <input type="text" formControlName="nombre" class="form-control" placeholder="Ej: Rediseño web" />
         </div>
+        
         <div class="form-group">
           <label>Cliente</label>
           <select formControlName="id_cliente" class="form-control">
@@ -25,6 +26,7 @@
             }
           </select>
         </div>
+
         <div class="form-group">
           <label>Estado</label>
           <select formControlName="estado" class="form-control">
@@ -33,13 +35,13 @@
             <option [value]="EstadoProyecto.BAJA">❌ Baja</option>
           </select>
         </div>
-        
+
         <div class="form-group">
           <label>Fecha Objetivo</label>
           <input type="date" formControlName="fechaObjetivo" class="form-control" />
         </div>
       </div>
-      
+
       <div class="form-actions">
         <button type="submit" class="btn btn-success" [disabled]="proyectoForm.invalid">
           <span>💾</span>
@@ -87,7 +89,10 @@
                 @else { ❌ Baja }
               </span>
             </td>
-            <td>{{ proyecto.fechaObjetivo ? (proyecto.fechaObjetivo | date:'dd/MM/yyyy':'UTC') : '⏳ Sin definir' }}</td>
+            <td>
+              <span>📅 </span>
+              <strong>{{ proyecto.fechaObjetivo ? (proyecto.fechaObjetivo | date:'dd/MM/yyyy':'UTC') : 'Sin definir' }}</strong>
+            </td>
             
             <td class="actions">
               <button (click)="viewTareas(proyecto.id!)" class="btn-icon btn-view" title="Ver tareas">📋</button>
