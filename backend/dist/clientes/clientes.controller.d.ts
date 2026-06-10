@@ -4,12 +4,12 @@ import { UpdateClienteDto } from './dto/update-cliente.dto';
 export declare class ClientesController {
     private readonly clientesService;
     constructor(clientesService: ClientesService);
-    create(createClienteDto: CreateClienteDto): Promise<{
+    create(createClienteDto: CreateClienteDto, req: any): Promise<{
         id: number;
     }>;
     findAll(): Promise<import("./dto/list-cliente.dto").ListClienteDto[]>;
     findActivos(): Promise<import("./dto/list-cliente.dto").ListClienteDto[]>;
     findOne(id: string): Promise<import("./dto/list-cliente.dto").ListClienteDto>;
-    update(id: string, updateClienteDto: UpdateClienteDto): Promise<import("./dto/list-cliente.dto").ListClienteDto>;
-    remove(id: string): Promise<void>;
+    update(id: string, updateClienteDto: UpdateClienteDto, req: any): Promise<import("./dto/list-cliente.dto").ListClienteDto>;
+    remove(id: string, req: any): Promise<import("./dto/list-cliente.dto").ListClienteDto>;
 }

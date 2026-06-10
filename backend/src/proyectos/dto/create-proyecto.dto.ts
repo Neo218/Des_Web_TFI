@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsNumber, IsNotEmpty, IsDateString } from 'class-validator';
 import { EstadoProyecto } from '../entities/proyecto.entity';
 
 export class CreateProyectoDto {
@@ -12,4 +12,11 @@ export class CreateProyectoDto {
   @IsOptional()
   @IsNumber()
   id_cliente?: number;
+
+  // ==========================================
+  // NUEVA AGREGACIÓN: Validación Fecha Objetivo
+  // ==========================================
+  @IsOptional()
+  @IsDateString()
+  fechaObjetivo?: string;
 }

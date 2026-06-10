@@ -13,12 +13,13 @@ const tareas_service_1 = require("./tareas.service");
 const tareas_controller_1 = require("./tareas.controller");
 const tarea_entity_1 = require("./entities/tarea.entity");
 const proyectos_module_1 = require("../proyectos/proyectos.module");
+const historial_module_1 = require("../historial/historial.module");
 let TareasModule = class TareasModule {
 };
 exports.TareasModule = TareasModule;
 exports.TareasModule = TareasModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([tarea_entity_1.Tarea]), (0, common_1.forwardRef)(() => proyectos_module_1.ProyectosModule)],
+        imports: [typeorm_1.TypeOrmModule.forFeature([tarea_entity_1.Tarea]), (0, common_1.forwardRef)(() => proyectos_module_1.ProyectosModule), historial_module_1.HistorialModule],
         providers: [tareas_service_1.TareasService],
         controllers: [tareas_controller_1.TareasController],
         exports: [tareas_service_1.TareasService],

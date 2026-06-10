@@ -21,6 +21,8 @@ const usuario_entity_1 = require("./usuarios/entities/usuario.entity");
 const cliente_entity_1 = require("./clientes/entities/cliente.entity");
 const proyecto_entity_1 = require("./proyectos/entities/proyecto.entity");
 const tarea_entity_1 = require("./tareas/entities/tarea.entity");
+const historial_module_1 = require("./historial/historial.module");
+const historial_cambio_entity_1 = require("./historial/entities/historial-cambio.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -37,7 +39,7 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USERNAME || 'postgres',
                 password: process.env.DB_PASSWORD || 'postgres',
                 database: process.env.DB_DATABASE || 'gestion_proyectos',
-                entities: [usuario_entity_1.Usuario, cliente_entity_1.Cliente, proyecto_entity_1.Proyecto, tarea_entity_1.Tarea],
+                entities: [usuario_entity_1.Usuario, cliente_entity_1.Cliente, proyecto_entity_1.Proyecto, tarea_entity_1.Tarea, historial_cambio_entity_1.HistorialCambio],
                 synchronize: false,
             }),
             auth_module_1.AuthModule,
@@ -45,6 +47,7 @@ exports.AppModule = AppModule = __decorate([
             clientes_module_1.ClientesModule,
             proyectos_module_1.ProyectosModule,
             tareas_module_1.TareasModule,
+            historial_module_1.HistorialModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

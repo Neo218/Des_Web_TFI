@@ -3,4 +3,5 @@ export declare class CreateProyectoDto {
     nombre: string;
     estado: EstadoProyecto;
     id_cliente?: number;
+    fechaObjetivo?: string;
 }

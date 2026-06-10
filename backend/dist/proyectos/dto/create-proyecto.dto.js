@@ -16,6 +16,7 @@ class CreateProyectoDto {
     nombre;
     estado;
     id_cliente;
+    fechaObjetivo;
 }
 exports.CreateProyectoDto = CreateProyectoDto;
 __decorate([
@@ -32,4 +33,9 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateProyectoDto.prototype, "id_cliente", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    __metadata("design:type", String)
+], CreateProyectoDto.prototype, "fechaObjetivo", void 0);
 //# sourceMappingURL=create-proyecto.dto.js.map

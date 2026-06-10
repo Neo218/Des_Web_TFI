@@ -12,4 +12,5 @@ export declare class Proyecto {
     id_cliente: number;
     cliente?: Cliente;
     tareas?: Tarea[];
+    fechaObjetivo?: Date;
 }

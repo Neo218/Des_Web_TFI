@@ -17,14 +17,31 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const tarea_entity_1 = require("./entities/tarea.entity");
+const historial_service_1 = require("../historial/historial.service");
 let TareasService = class TareasService {
     tareasRepository;
-    constructor(tareasRepository) {
+    historialService;
+    constructor(tareasRepository, historialService) {
         this.tareasRepository = tareasRepository;
+        this.historialService = historialService;
     }
-    async create(createTareaDto) {
+    async create(createTareaDto, usuario) {
         const tarea = this.tareasRepository.create(createTareaDto);
         const saved = await this.tareasRepository.save(tarea);
+        await this.historialService.registrarCambio({
+            entidad: 'Tareas',
+            idRegistro: saved.id,
+            accion: 'CREACION',
+            usuario,
+            detalle: {
+                despues: {
+                    id: saved.id,
+                    descripcion: saved.descripcion,
+                    estado: saved.estado,
+                    id_proyecto: saved.id_proyecto,
+                },
+            },
+        });
         return { id: saved.id };
     }
     async findAll() {
@@ -98,10 +115,32 @@ let TareasService = class TareasService {
             proyecto: proyectoDto,
         };
     }
-    async update(id, updateTareaDto) {
+    async update(id, updateTareaDto, usuario) {
         const tarea = await this._findOneEntity(id);
+        const antes = {
+            id: tarea.id,
+            descripcion: tarea.descripcion,
+            estado: tarea.estado,
+            id_proyecto: tarea.id_proyecto,
+            proyecto: tarea.proyecto?.nombre,
+        };
         Object.assign(tarea, updateTareaDto);
         const saved = await this.tareasRepository.save(tarea);
+        await this.historialService.registrarCambio({
+            entidad: 'Tareas',
+            idRegistro: saved.id,
+            accion: 'MODIFICACION',
+            usuario,
+            detalle: {
+                antes,
+                despues: {
+                    id: saved.id,
+                    descripcion: saved.descripcion,
+                    estado: saved.estado,
+                    id_proyecto: saved.id_proyecto,
+                },
+            },
+        });
         const clienteDto = saved.proyecto?.cliente ? {
             id: saved.proyecto.cliente.id,
             nombre: saved.proyecto.cliente.nombre,
@@ -120,9 +159,23 @@ let TareasService = class TareasService {
             proyecto: proyectoDto,
         };
     }
-    async remove(id) {
+    async remove(id, usuario) {
         const tarea = await this._findOneEntity(id);
+        const antes = {
+            id: tarea.id,
+            descripcion: tarea.descripcion,
+            estado: tarea.estado,
+            id_proyecto: tarea.id_proyecto,
+            proyecto: tarea.proyecto?.nombre,
+        };
         await this.tareasRepository.remove(tarea);
+        await this.historialService.registrarCambio({
+            entidad: 'Tareas',
+            idRegistro: id,
+            accion: 'ELIMINACION',
+            usuario,
+            detalle: { antes },
+        });
     }
     async _findOneEntity(id) {
         const tarea = await this.tareasRepository.findOne({
@@ -148,6 +201,7 @@ exports.TareasService = TareasService;
 exports.TareasService = TareasService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(tarea_entity_1.Tarea)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        historial_service_1.HistorialService])
 ], TareasService);
 //# sourceMappingURL=tareas.service.js.map

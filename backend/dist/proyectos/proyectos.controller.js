@@ -23,8 +23,8 @@ let ProyectosController = class ProyectosController {
     constructor(proyectosService) {
         this.proyectosService = proyectosService;
     }
-    create(createProyectoDto) {
-        return this.proyectosService.create(createProyectoDto);
+    create(createProyectoDto, req) {
+        return this.proyectosService.create(createProyectoDto, req.user);
     }
     findAll() {
         return this.proyectosService.findAll();
@@ -35,19 +35,20 @@ let ProyectosController = class ProyectosController {
     findOneWithTareas(id) {
         return this.proyectosService.findOneWithTareas(+id);
     }
-    update(id, updateProyectoDto) {
-        return this.proyectosService.update(+id, updateProyectoDto);
+    update(id, updateProyectoDto, req) {
+        return this.proyectosService.update(+id, updateProyectoDto, req.user);
     }
-    remove(id) {
-        return this.proyectosService.remove(+id);
+    remove(id, req) {
+        return this.proyectosService.remove(+id, req.user);
     }
 };
 exports.ProyectosController = ProyectosController;
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_proyecto_dto_1.CreateProyectoDto]),
+    __metadata("design:paramtypes", [create_proyecto_dto_1.CreateProyectoDto, Object]),
     __metadata("design:returntype", void 0)
 ], ProyectosController.prototype, "create", null);
 __decorate([
@@ -74,15 +75,17 @@ __decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_proyecto_dto_1.UpdateProyectoDto]),
+    __metadata("design:paramtypes", [String, update_proyecto_dto_1.UpdateProyectoDto, Object]),
     __metadata("design:returntype", void 0)
 ], ProyectosController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], ProyectosController.prototype, "remove", null);
 exports.ProyectosController = ProyectosController = __decorate([

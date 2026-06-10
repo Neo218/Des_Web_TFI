@@ -33,7 +33,13 @@
             <option [value]="EstadoProyecto.BAJA">❌ Baja</option>
           </select>
         </div>
+        
+        <div class="form-group">
+          <label>Fecha Objetivo</label>
+          <input type="date" formControlName="fechaObjetivo" class="form-control" />
+        </div>
       </div>
+      
       <div class="form-actions">
         <button type="submit" class="btn btn-success" [disabled]="proyectoForm.invalid">
           <span>💾</span>
@@ -64,6 +70,7 @@
             <th>Nombre</th>
             <th>Cliente</th>
             <th>Estado</th>
+            <th>Fecha Objetivo</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -80,6 +87,8 @@
                 @else { ❌ Baja }
               </span>
             </td>
+            <td>{{ proyecto.fechaObjetivo ? (proyecto.fechaObjetivo | date:'dd/MM/yyyy':'UTC') : '⏳ Sin definir' }}</td>
+            
             <td class="actions">
               <button (click)="viewTareas(proyecto.id!)" class="btn-icon btn-view" title="Ver tareas">📋</button>
               <button (click)="editProyecto(proyecto)" class="btn-icon btn-edit" title="Editar">✏️</button>

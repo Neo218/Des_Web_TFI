@@ -26,6 +26,7 @@ let Proyecto = class Proyecto {
     id_cliente;
     cliente;
     tareas;
+    fechaObjetivo;
 };
 exports.Proyecto = Proyecto;
 __decorate([
@@ -57,6 +58,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => tarea_entity_1.Tarea, (tarea) => tarea.proyecto),
     __metadata("design:type", Array)
 ], Proyecto.prototype, "tareas", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'fecha_objetivo', type: 'date', nullable: true }),
+    __metadata("design:type", Date)
+], Proyecto.prototype, "fechaObjetivo", void 0);
 exports.Proyecto = Proyecto = __decorate([
     (0, typeorm_1.Entity)('proyectos')
 ], Proyecto);

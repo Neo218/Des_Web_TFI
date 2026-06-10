@@ -28,10 +28,14 @@ export class ProyectosComponent implements OnInit {
   showForm = signal(false);
   editingId: number | null = null;
 
+  // ==========================================
+  // MODIFICACIÓN: Agregado fechaObjetivo al Formulario Reactivo
+  // ==========================================
   proyectoForm = this.fb.nonNullable.group({
     nombre: ['', Validators.required],
     estado: [EstadoProyecto.ACTIVO, Validators.required],
     id_cliente: [null as number | null],
+    fechaObjetivo: [''], 
   });
 
   EstadoProyecto = EstadoProyecto;
@@ -67,20 +71,27 @@ export class ProyectosComponent implements OnInit {
 
   showCreateForm(): void {
     this.editingId = null;
-    this.proyectoForm.reset({ estado: EstadoProyecto.ACTIVO, id_cliente: 0 });
+    this.proyectoForm.reset({ estado: EstadoProyecto.ACTIVO, id_cliente: 0, fechaObjetivo: '' });
     this.showForm.set(true);
   }
 
+  // ==========================================
+  // MODIFICACIÓN: Cargamos la fecha al editar
+  // ==========================================
   editProyecto(proyecto: Proyecto): void {
     this.editingId = proyecto.id || null;
     this.proyectoForm.patchValue({
       nombre: proyecto.nombre,
       estado: proyecto.estado,
       id_cliente: proyecto.id_cliente ?? 0,
+      fechaObjetivo: proyecto.fechaObjetivo ? proyecto.fechaObjetivo.toString().split('T')[0] : '',
     });
     this.showForm.set(true);
   }
 
+  // ==========================================
+  // MODIFICACIÓN: Enviamos la fecha al Backend
+  // ==========================================
   saveProyecto(): void {
     if (this.proyectoForm.invalid) {
       console.log('Formulario inválido:', this.proyectoForm.errors);
@@ -92,11 +103,11 @@ export class ProyectosComponent implements OnInit {
 
     const idClienteValue = Number(rawValue.id_cliente);
 
-    // Solo agregar id_cliente si es mayor a 0 (proyecto con cliente)
     const data = {
       nombre: rawValue.nombre,
       estado: rawValue.estado,
       ...(idClienteValue > 0 ? { id_cliente: idClienteValue } : {}),
+      ...(rawValue.fechaObjetivo ? { fechaObjetivo: rawValue.fechaObjetivo } : {}), // Envía la fecha si el usuario eligió una
     } as Omit<Proyecto, 'id' | 'cliente' | 'tareas'>;
 
     console.log('Datos a enviar:', data);

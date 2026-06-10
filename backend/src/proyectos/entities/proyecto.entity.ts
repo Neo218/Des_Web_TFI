@@ -32,4 +32,10 @@ export class Proyecto {
 
   @OneToMany(() => Tarea, (tarea) => tarea.proyecto)
   tareas?: Tarea[];
+
+  // ==========================================
+  // NUEVA AGREGACIÓN: Función Fecha Objetivo
+  // ==========================================
+  @Column({ name: 'fecha_objetivo', type: 'date', nullable: true })
+  fechaObjetivo?: Date;
 }
