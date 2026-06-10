@@ -7,7 +7,7 @@ import { Cliente, EstadoCliente } from './cliente.model';
   providedIn: 'root',
 })
 export class ClienteService {
-  private apiUrl = 'http://localhost:3000/api/clientes';
+  private apiUrl = '/api/clientes';
 
   constructor(private http: HttpClient) {}
 
@@ -31,7 +31,7 @@ export class ClienteService {
     return this.http.put<Cliente>(`${this.apiUrl}/${id}`, cliente);
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: number): Observable<Cliente> {
+    return this.http.delete<Cliente>(`${this.apiUrl}/${id}`);
   }
 }

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,9 +12,13 @@ import { Usuario } from '../usuarios/entities/usuario.entity';
   imports: [
     TypeOrmModule.forFeature([Usuario]),
     PassportModule,
-    JwtModule.register({
-      secret: 'SECRET_KEY', // En producción usar variable de entorno
-      signOptions: { expiresIn: '8h' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'SECRET_KEY',
+        signOptions: { expiresIn: '8h' },
+      }),
     }),
   ],
   providers: [AuthService, JwtStrategy],

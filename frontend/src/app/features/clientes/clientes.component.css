@@ -33,6 +33,26 @@
   margin-bottom: 1.5rem;
 }
 
+.alert {
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.alert-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fecaca;
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #bbf7d0;
+}
+
 .form-card h3 {
   margin: 0 0 1.25rem 0;
   color: var(--text-primary);

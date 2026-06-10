@@ -7,7 +7,7 @@ import { HistorialCambio } from './historial.model';
   providedIn: 'root',
 })
 export class HistorialService {
-  private apiUrl = 'http://localhost:3000/api/historial';
+  private apiUrl = '/api/historial';
 
   constructor(private http: HttpClient) {}
 
