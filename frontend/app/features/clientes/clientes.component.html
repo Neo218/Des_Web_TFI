@@ -1,0 +1,167 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2><span class="page-header-icon">👥</span> Gestion de Clientes</h2>
+    @if (authStore.esAdmin()) {
+    <button (click)="showCreateForm()" class="btn btn-primary">
+      <span>+</span>
+      <span>Nuevo Cliente</span>
+    </button>
+    <div class="filter-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="🔎 Buscar cliente..."
+        class="form-control"
+      />
+      <select
+        [(ngModel)]="orden"
+        (change)="ordenarClientes()"
+        class="form-control"
+        style="max-width: 180px;">
+        <option value="asc">Nombre A-Z</option>
+        <option value="desc">Nombre Z-A</option>
+      </select>
+    </div>
+    }
+  </div>
+
+  @if (errorMessage()) {
+  <div class="alert alert-error">
+    {{ errorMessage() }}
+  </div>
+  }
+
+  @if (successMessage()) {
+  <div class="alert alert-success">
+    {{ successMessage() }}
+  </div>
+  }
+
+  @if (showForm() && authStore.esAdmin()) {
+  <div class="form-card">
+    <h3>@if (editingId) { Editar Cliente } @else { Nuevo Cliente }</h3>
+    <form [formGroup]="clienteForm" (ngSubmit)="saveCliente()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre del cliente</label>
+          <input type="text" formControlName="nombre" class="form-control" [ngClass]="{'error': nombreInvalid}" placeholder="Ej: Empresa S.A." />
+          @if (nombreInvalid) {
+          <small class="error-text">El nombre es obligatorio</small>
+          }
+        </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <select formControlName="estado" class="form-control">
+            <option [value]="EstadoCliente.ACTIVO">Activo</option>
+            <option [value]="EstadoCliente.BAJA">Baja</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Teléfono (opcional)</label>
+          <input type="text" formControlName="telefono" class="form-control" [ngClass]="{'error': telefonoInvalid}" placeholder="Ej: +54 11 1234-5678" />
+          @if (telefonoInvalid) {
+          <small class="error-text">Solo números (7-15 dígitos), opcionalmente con código de país</small>
+          }
+        </div>
+        <div class="form-group">
+          <label>Email (opcional)</label>
+          <input type="email" formControlName="email" class="form-control" [ngClass]="{'error': emailInvalid}" placeholder="Ej: contacto@empresa.com" />
+          @if (emailInvalid) {
+          <small class="error-text">Ingresa un email válido</small>
+          }
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Dirección (opcional)</label>
+          <input type="text" formControlName="direccion" class="form-control" placeholder="Ej: Av. Corrientes 1234, CABA" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="clienteForm.invalid">
+          <span>Guardar</span>
+        </button>
+        <button type="button" (click)="cancelForm()" class="btn btn-secondary">
+          <span>Cancelar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  }
+
+  <ng-container *ngIf="loading(); else loaded">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <p>Cargando clientes...</p>
+    </div>
+  </ng-container>
+
+  <ng-template #loaded>
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Dirección</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (cliente of clientesPaginados; track cliente.id) {
+          <tr>
+            <td>#{{ cliente.id }}</td>
+            <td><strong>{{ cliente.nombre }}</strong></td>
+            <td>{{ cliente.telefono || '-' }}</td>
+            <td>{{ cliente.email || '-' }}</td>
+            <td>{{ cliente.direccion || '-' }}</td>
+            <td>
+              <span class="badge" [ngClass]="getEstadoClass(cliente.estado)">
+                @if (cliente.estado === EstadoCliente.ACTIVO) { Activo }
+                @else { Baja }
+              </span>
+            </td>
+            <td class="actions">
+              @if (authStore.esAdmin()) {
+              <button (click)="editCliente(cliente)" class="btn-icon btn-edit" title="Editar">✏️</button>
+              <button (click)="deleteCliente(cliente.id!)" class="btn-icon btn-delete" title="Dar de baja">🗑️</button>
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (clientesFiltrados.length === 0) {
+      <div class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <div class="empty-state-text">No hay clientes registrados</div>
+        <p>Crea tu primer cliente para comenzar</p>
+      </div>
+      }
+
+      @if (clientesFiltrados.length > clientesPorPagina) {
+      <div class="pagination">
+        <button
+          (click)="paginaAnterior()"
+          [disabled]="paginaActual === 1"
+          class="btn btn-secondary">
+          Anterior
+        </button>
+        <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+        <button
+          (click)="paginaSiguiente()"
+          [disabled]="paginaActual === totalPaginas"
+          class="btn btn-secondary">
+          Siguiente
+        </button>
+      </div>
+      }
+    </div>
+  </ng-template>
+</div>
