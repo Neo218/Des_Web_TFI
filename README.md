@@ -1,7 +1,5 @@
 # TPIF - Sistema de Gestión de Proyectos
 
-Sistema de gestión de proyectos para consultoras con control de tareas, clientes y usuarios.
-
 ## 📋 Tabla de Contenidos
 
 - [Tecnologías](#tecnologías)
@@ -211,9 +209,7 @@ Swagger UI permite probar todos los endpoints de la API de forma interactiva.
 | POST | `/api/tareas` | Crear tarea |
 | GET | `/api/historial` | Ver historial de cambios |
 
-## 🔄 Changelog - Últimos Cambios
-
-### v1.0.0 (2026-06-12)
+## 🔄 Changelog
 
 #### Backend
 - ✅ Configuración de Swagger para documentación de API
@@ -241,8 +237,3 @@ Swagger UI permite probar todos los endpoints de la API de forma interactiva.
 #### Deploy
 - ✅ Configuración nginx + PM2 lista
 - ✅ Carpeta `Entrega` con solo archivos necesarios
-
----
-
-**Desarrollado para:** Trabajo Práctico Integrador Final - Desarrollo de Aplicaciones Web
-**Fecha:** Junio 2026
