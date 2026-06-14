@@ -1,7 +1,7 @@
 -- =====================================================
 -- TPIF - BASE DE DATOS COMPLETA
 -- Script para crear toda la estructura de la BD
--- Version: 2026-06-12
+-- Version: 2026-06-14 (Entrega)
 -- =====================================================
 
 -- Crear tipos ENUM (si no existen)
@@ -67,17 +67,16 @@ CREATE TABLE IF NOT EXISTS tareas (
 -- =====================================================
 -- TABLA: historial_cambios
 -- (Registra auditoria de cambios)
--- id_registro, usuario_id y detalle pueden ser NULL
 -- =====================================================
 CREATE TABLE IF NOT EXISTS historial_cambios (
     id SERIAL PRIMARY KEY,
     entidad TEXT NOT NULL,
-    id_registro INT NULL,
+    id_registro INT,
     accion TEXT NOT NULL,
-    usuario_id INT NULL,
+    usuario_id INT,
     usuario_nombre TEXT NOT NULL,
     fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    detalle TEXT NULL
+    detalle TEXT
 );
 
 -- =====================================================
@@ -94,17 +93,16 @@ CREATE INDEX IF NOT EXISTS idx_historial_entidad ON historial_cambios(entidad);
 CREATE INDEX IF NOT EXISTS idx_historial_fecha ON historial_cambios(fecha);
 
 -- =====================================================
--- DATOS DE EJEMPLO (opcionales - comentar si no se necesitan)
+-- USUARIOS ADMIN
+-- Usuario: admin / Clave: admin / Rol: ADMIN
+-- Usuario: usuario / Clave: clave / Rol: ADMIN
 -- =====================================================
-
--- Usuario por defecto: usuario / clave
 INSERT INTO usuarios (nombre, clave, estado, rol)
-VALUES ('usuario', crypt('clave', gen_salt('bf', 10)), 'ACTIVO', 'USUARIO')
+VALUES ('admin', crypt('admin', gen_salt('bf', 10)), 'ACTIVO', 'ADMIN')
 ON CONFLICT (nombre) DO NOTHING;
 
--- Usuario administrador: admin / admin123
 INSERT INTO usuarios (nombre, clave, estado, rol)
-VALUES ('admin', crypt('admin123', gen_salt('bf', 10)), 'ACTIVO', 'ADMIN')
+VALUES ('usuario', crypt('clave', gen_salt('bf', 10)), 'ACTIVO', 'ADMIN')
 ON CONFLICT (nombre) DO NOTHING;
 
 -- =====================================================

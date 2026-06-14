@@ -1,5 +1,7 @@
 # TPIF - Sistema de Gestión de Proyectos
 
+Sistema de gestión de proyectos para consultoras con control de tareas, clientes y usuarios.
+
 ## 📋 Tabla de Contenidos
 
 - [Tecnologías](#tecnologías)
@@ -144,19 +146,20 @@ psql -U postgres -d gestion_proyectos -f TPIF_BASE_COMPLETA.sql
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
+DB_USERNAME=gestion2026
+DB_PASSWORD=gestion2026
 DB_DATABASE=gestion_proyectos
+
+JWT_SECRET=SECRET_KEY
 PORT=3000
-JWT_SECRET=tu_clave_secreta_aqui
 ```
 
 ### Credenciales por Defecto
 
 | Usuario | Clave | Rol |
 |---------|-------|-----|
-| `usuario` | `clave` | USUARIO |
-| `admin` | `admin123` | ADMIN |
+| `admin` | `admin` | ADMIN |
+| `usuario` | `clave` | ADMIN |
 
 ## 📦 Deploy
 
@@ -209,7 +212,9 @@ Swagger UI permite probar todos los endpoints de la API de forma interactiva.
 | POST | `/api/tareas` | Crear tarea |
 | GET | `/api/historial` | Ver historial de cambios |
 
-## 🔄 Changelog
+## 🔄 Changelog - Últimos Cambios
+
+### v1.0.0 (2026-06-12)
 
 #### Backend
 - ✅ Configuración de Swagger para documentación de API
@@ -237,3 +242,8 @@ Swagger UI permite probar todos los endpoints de la API de forma interactiva.
 #### Deploy
 - ✅ Configuración nginx + PM2 lista
 - ✅ Carpeta `Entrega` con solo archivos necesarios
+
+---
+
+**Desarrollado para:** Trabajo Práctico Integrador Final - Desarrollo de Aplicaciones Web
+**Fecha:** Junio 2026
